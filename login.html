@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="login.css" />
+  <!-- Supabaseライブラリ（CDNから読み込む） -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div class="bg-wrapper">
@@ -63,8 +65,11 @@
 
     <div class="register-row">
       <span>アカウントをお持ちでいらっしゃいませんか？</span>
-      <a href="#" class="btn-register">新規登録 ↗</a>
+      <a href="#" class="btn-register" onclick="handleRegister()">新規登録 ↗</a>
     </div>
   </div>
+  <!-- supabase.jsを先に読み込む（login.jsより前に必要） -->
+  <script src="supabase.js"></script>
+  <script src="login.js"></script>
 </body>
 </html>
