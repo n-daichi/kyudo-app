@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KYUDO DOJO - 統計・分析</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="common.css" />
+  <link rel="stylesheet" href="stats.css" />
+</head>
+<body>
+
+  <!-- サイドバー -->
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="user-avatar">弓</div>
+      <div class="user-info">
+        <p class="user-name">Kyudojin</p>
+        <p class="user-rank">Rank: Shodan</p>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dojo
+      </a>
+      <a href="stats.html" class="nav-item active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Stats
+      </a>
+      <a href="mato.html" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+        Mato
+      </a>
+      <a href="#" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="#" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Support
+      </a>
+      <a href="login.html" class="nav-item signout">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <!-- メインコンテンツ -->
+  <main class="main-content">
+    <header class="page-header">
+      <h1 class="page-title" style="font-family:'Noto Sans JP',sans-serif;font-size:20px;font-weight:700;letter-spacing:0;">統計・分析</h1>
+      <div class="header-actions">
+        <button class="icon-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </button>
+        <button class="icon-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20 12h-2M6 12H4M19.07 19.07l-1.41-1.41M5.34 5.34L3.93 3.93M12 20v-2M12 6V4"/></svg>
+        </button>
+        <div class="avatar-btn">弓</div>
+      </div>
+    </header>
+
+    <!-- サマリーカード -->
+    <div class="summary-row">
+      <div class="summary-card">
+        <p class="summary-label">WEEKLY SUMMARY</p>
+        <p class="summary-big">72.5 <span class="summary-unit">%</span></p>
+        <p class="summary-diff up">▲ 先週比 +4.2%</p>
+        <p class="summary-detail">今週の記録：120射 / 的中：87.6</p>
+      </div>
+      <div class="summary-card">
+        <p class="summary-label">MONTHLY SUMMARY</p>
+        <p class="summary-big">68.1 <span class="summary-unit">%</span></p>
+        <p class="summary-diff down">▼ 先月比 -1.5%</p>
+        <p class="summary-detail">今月の記録：150射 / 的中：127.6</p>
+      </div>
+      <div class="summary-card best">
+        <div class="best-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+          BEST PERFORMANCE
+        </div>
+        <p class="best-num">12 <span class="best-unit">連射的中</span></p>
+        <p class="best-date">記録日：2023年10月5日</p>
+      </div>
+    </div>
+
+    <!-- グラフ + 矢別分析 -->
+    <div class="chart-row">
+
+      <!-- 的中率グラフ -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green-mid)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <span class="chart-title">的中率推移（過去30日間）</span>
+          </div>
+          <select class="chart-select" onchange="updateChart(this.value)">
+            <option value="30">過去30日</option>
+            <option value="7">過去7日</option>
+            <option value="90">過去90日</option>
+          </select>
+        </div>
+        <div class="bar-chart" id="bar-chart"></div>
+        <div class="chart-x-labels" id="chart-x"></div>
+      </div>
+
+      <!-- 矢別的中分析 -->
+      <div class="arrow-analysis-card">
+        <h3 class="chart-title" style="margin-bottom:16px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          矢別的中率分析
+        </h3>
+        <div class="arrow-bars" id="arrow-bars"></div>
+        <div class="arrow-note">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          分析：4本目の筆力が低下傾向にあります。残心の意識を保ちましょう。
+        </div>
+      </div>
+    </div>
+
+    <!-- 的中傾向分析 + ミニ統計 -->
+    <div class="bottom-row">
+      <div class="tendency-card">
+        <div class="tendency-visual">
+          <!-- 的のミニ表示 -->
+          <canvas id="mini-mato" width="80" height="80"></canvas>
+        </div>
+        <div class="tendency-text">
+          <h3 class="chart-title">的中傾向分析</h3>
+          <p class="tendency-desc">着弾点は中心右側（約2時）に集中しています。安定した手の内の力のかけ方が継続できています。</p>
+        </div>
+      </div>
+
+      <div class="mini-stat-card">
+        <p class="mini-stat-label">平均矢数/日</p>
+        <p class="mini-stat-val">24.5 <span class="mini-stat-unit">本</span></p>
+        <p class="mini-stat-sub">平均的な射手の1.2倍（要→平均に近い）</p>
+      </div>
+
+      <div class="mini-stat-card">
+        <p class="mini-stat-label">射のリズム</p>
+        <p class="mini-stat-val">42 <span class="mini-stat-unit">sec</span></p>
+        <p class="mini-stat-sub">平均的な射手の間隔（要→平均より速い）</p>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="stats.js"></script>
+</body>
+</html>
