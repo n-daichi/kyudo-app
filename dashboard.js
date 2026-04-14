@@ -3,33 +3,83 @@
 // ===========================
 
 // ──────────────────────────────
-// データ（後でSupabaseから取得する）
+// 状態管理
 // ──────────────────────────────
 
-// 今日のセッションデータ（例）
-const sessions = [
-  { label: 'SESSION 1', hits: 4, total: 4 },
-  { label: 'SESSION 2', hits: 3, total: 4 },
-  { label: 'SESSION 3', hits: 4, total: 4 },
-  { label: 'SESSION 4', hits: 1, total: 4 },
-];
+// 現在の立ち番号
+let currentSession = 1;
 
-// 現在の立ち：5矢ぶん入力できる
-// null=未入力, true=的中, false=失中
-let arrows = [true, true, null, null, null];
+// 現在の矢の状態（null=未入力, true=的中, false=失中）
+let arrows = [null, null, null, null];
 
-// 練習ログ（例）
-const logs = [
-  { month: 'OCT', day: 24, title: '午後の稽古', detail: '20射 16中｜中率 80%', dots: [true, true, true, false] },
-  { month: 'OCT', day: 22, title: '朝の稽古',   detail: '12射 9中｜中率 75%',  dots: [true, true, false, true] },
-  { month: 'OCT', day: 20, title: '道場練習',   detail: '16射 10中｜中率 63%', dots: [true, false, true, false] },
-];
+// 今日のセッションデータ（Supabaseから取得して更新）
+let sessions = [];
 
 // ──────────────────────────────
-// セッション行を描画する
+// ページ読み込み時の処理
+// ──────────────────────────────
+async function init() {
+  // ログインチェック
+  const user = await getCurrentUser();
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  // 今日のデータをSupabaseから取得
+  await loadTodayData();
+  renderArrows();
+  renderLogs();
+}
+
+// ──────────────────────────────
+// 今日のデータをSupabaseから取得
+// ──────────────────────────────
+async function loadTodayData() {
+  try {
+    const shots = await getTodayShots();
+
+    // セッションごとに集計
+    const sessionMap = {};
+    shots.forEach(shot => {
+      if (!sessionMap[shot.session_num]) {
+        sessionMap[shot.session_num] = { hits: 0, total: 0 };
+      }
+      sessionMap[shot.session_num].total++;
+      if (shot.result) sessionMap[shot.session_num].hits++;
+    });
+
+    // sessionsを更新
+    sessions = Object.entries(sessionMap).map(([num, data]) => ({
+      label: `SESSION ${num}`,
+      hits:  data.hits,
+      total: data.total,
+    }));
+
+    // 現在の立ち番号を更新
+    currentSession = Object.keys(sessionMap).length + 1;
+
+    renderSessions();
+    renderAccuracy();
+    updateRecordSub();
+
+  } catch (error) {
+    console.error('データ取得エラー:', error);
+    // エラー時はダミーデータで表示
+    renderSessions();
+    renderAccuracy();
+  }
+}
+
+// ──────────────────────────────
+// セッション行を描画
 // ──────────────────────────────
 function renderSessions() {
   const row = document.getElementById('session-row');
+  if (sessions.length === 0) {
+    row.innerHTML = '<span style="font-size:12px;color:#999;">まだ記録がありません</span>';
+    return;
+  }
   row.innerHTML = sessions.map(s => {
     const isAll = s.hits === s.total;
     return `
@@ -42,7 +92,7 @@ function renderSessions() {
 }
 
 // ──────────────────────────────
-// 今日の的中率を計算して表示
+// 的中率を計算して表示
 // ──────────────────────────────
 function renderAccuracy() {
   const totalHits  = sessions.reduce((sum, s) => sum + s.hits,  0);
@@ -52,15 +102,25 @@ function renderAccuracy() {
 }
 
 // ──────────────────────────────
-// 矢ボタンを描画する
+// 立ちの表示を更新
+// ──────────────────────────────
+function updateRecordSub() {
+  const start = (currentSession - 1) * 4 + 1;
+  const end   = currentSession * 4;
+  document.getElementById('record-sub').textContent =
+    `現在の立ち：第${currentSession}局（${start}射目〜${end}射目）`;
+}
+
+// ──────────────────────────────
+// 矢ボタンを描画
 // ──────────────────────────────
 function renderArrows() {
   const grid = document.getElementById('arrow-grid');
   grid.innerHTML = arrows.map((state, i) => {
     let label, className;
-    if (state === true)  { label = '○'; className = 'arrow-btn state-hit'; }
+    if (state === true)       { label = '○'; className = 'arrow-btn state-hit'; }
     else if (state === false) { label = '×'; className = 'arrow-btn state-miss'; }
-    else                 { label = i + 1; className = 'arrow-btn'; }
+    else                      { label = i + 1; className = 'arrow-btn'; }
 
     return `
       <button class="${className}" onclick="toggleArrow(${i})">
@@ -72,44 +132,83 @@ function renderArrows() {
 }
 
 // ──────────────────────────────
-// 矢ボタンをクリックしたとき
-// null → true → false → null と切り替える
+// 矢ボタンをクリック
+// null → true → false → null
 // ──────────────────────────────
 function toggleArrow(index) {
   if (arrows[index] === null)       arrows[index] = true;
   else if (arrows[index] === true)  arrows[index] = false;
   else                              arrows[index] = null;
-
-  renderArrows();  // 再描画
+  renderArrows();
 }
 
 // ──────────────────────────────
-// 保存ボタンを押したとき
+// 保存ボタン → Supabaseに保存
 // ──────────────────────────────
-function saveRecord() {
-  const hits   = arrows.filter(a => a === true).length;
-  const total  = arrows.filter(a => a !== null).length;
-
-  if (total === 0) {
+async function saveRecord() {
+  const recorded = arrows.filter(a => a !== null);
+  if (recorded.length === 0) {
     alert('まだ記録がありません');
     return;
   }
 
-  // ここに後でSupabaseへの保存処理を書く
-  console.log('保存データ:', { hits, total, arrows });
-  alert(`保存しました！${hits}/${total}中`);
+  const btn  = document.querySelector('.btn-save');
+  btn.textContent = '保存中...';
+  btn.disabled    = true;
+
+  try {
+    const today = new Date().toISOString().split('T')[0];
+
+    // 矢1本ずつSupabaseに保存
+    for (let i = 0; i < arrows.length; i++) {
+      if (arrows[i] === null) continue;
+
+      await saveShot({
+        shot_date:   today,
+        session_num: currentSession,
+        arrow_num:   i + 1,
+        arrow_type:  i % 2 === 0 ? 'haya' : 'otoya', // 1,3本目=甲矢 / 2,4本目=乙矢
+        result:      arrows[i],
+        pos_x:       null,
+        pos_y:       null,
+      });
+    }
+
+    // 保存成功
+    const hits = arrows.filter(a => a === true).length;
+    alert(`保存しました！${hits}/${recorded.length}中`);
+
+    // 矢をリセットして次の立ちへ
+    arrows = [null, null, null, null];
+    currentSession++;
+    await loadTodayData();
+    renderArrows();
+
+  } catch (error) {
+    alert('保存に失敗しました：' + error.message);
+    console.error(error);
+  } finally {
+    btn.textContent = '保存';
+    btn.disabled    = false;
+  }
 }
 
 // ──────────────────────────────
-// 練習ログを描画する
+// 練習ログを描画（ダミーデータ）
+// 後でSupabaseから取得するように変更予定
 // ──────────────────────────────
 function renderLogs() {
+  const logs = [
+    { month: 'OCT', day: 24, title: '午後の稽古', detail: '20射 16中｜中率 80%', dots: [true, true, true, false] },
+    { month: 'OCT', day: 22, title: '朝の稽古',   detail: '12射 9中｜中率 75%',  dots: [true, true, false, true] },
+    { month: 'OCT', day: 20, title: '道場練習',   detail: '16射 10中｜中率 63%', dots: [true, false, true, false] },
+  ];
+
   const list = document.getElementById('log-list');
   list.innerHTML = logs.map(log => {
     const dots = log.dots.map(hit =>
       `<div class="dot ${hit ? 'hit' : 'miss'}"></div>`
     ).join('');
-
     return `
       <div class="log-item">
         <div class="log-date">
@@ -128,9 +227,6 @@ function renderLogs() {
 }
 
 // ──────────────────────────────
-// ページ読み込み時に全部描画
+// 初期化
 // ──────────────────────────────
-renderSessions();
-renderAccuracy();
-renderArrows();
-renderLogs();
+init();
