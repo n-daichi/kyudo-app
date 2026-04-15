@@ -3,16 +3,28 @@
 // ===========================
 
 // ──────────────────────────────
+// 今日の知恵（日替わり）
+// ──────────────────────────────
+const wisdoms = [
+  '「正射必中」－正しく射られた矢は、必ず的に当たる。',
+  '「残心」－射終わった後も心を残し、気を抜かないこと。',
+  '「弓は心の鏡」－射の乱れは心の乱れを映す。',
+  '「会」－体と弓が一体となった瞬間を大切に。',
+  '「離れ」－力を抜くのではなく、力が自然に放たれること。',
+  '「的中よりも射形」－美しい射から的中は生まれる。',
+  '「呼吸」－息を整えることが射を整える第一歩。',
+];
+
+// ──────────────────────────────
 // 状態管理
 // ──────────────────────────────
-let currentTab   = 'haya';
-let pendingX     = null;
-let pendingY     = null;
-let shots        = [];       // 今セッションの射（画面表示用）
-let currentSession = 1;
+let currentTab      = 'haya';
+let pendingX        = null;
+let pendingY        = null;
+let shots           = [];
+let currentSession  = 1;
 let currentArrowNum = 1;
 
-// ヒートマップデータ（今日のデータから計算）
 let heatmapData = [
   { zone: '名上 (Upper Right)', pct: 0 },
   { zone: '中心部 (Center)',     pct: 0 },
@@ -29,8 +41,11 @@ async function init() {
     return;
   }
 
-  // 今日の着弾データを取得してヒートマップに反映
-  await loadTodayHeatmap();
+  // 今日の知恵（日付で切り替え）
+  const dayIndex = new Date().getDate() % wisdoms.length;
+  document.getElementById('daily-wisdom').textContent = wisdoms[dayIndex];
+
+  await loadTodayData();
 
   drawMato();
   renderShotHistory();
@@ -38,50 +53,62 @@ async function init() {
 }
 
 // ──────────────────────────────
-// 今日の着弾データを取得してヒートマップ計算
+// 今日のデータを取得して画面を更新
 // ──────────────────────────────
-async function loadTodayHeatmap() {
+async function loadTodayData() {
   try {
     const todayShots = await getTodayShots();
+
+    // 統計グリッドを更新
+    const hits     = todayShots.filter(s => s.result).length;
+    const total    = todayShots.length;
+    const hitRate  = total > 0 ? Math.round(hits / total * 100) : 0;
+    const sessions = new Set(todayShots.map(s => s.session_num)).size;
+
+    document.getElementById('stat-hitrate').innerHTML = `${hitRate}<span class="stat-unit">%</span>`;
+    document.getElementById('stat-total').textContent  = total;
+    document.getElementById('stat-hits').textContent   = hits;
+    document.getElementById('stat-sessions').textContent = sessions;
+
+    // 現在のセッション番号を更新
+    currentSession  = sessions + 1;
+    currentArrowNum = (todayShots.length % 4) + 1;
+
+    // セッション名を更新
+    document.getElementById('session-name').textContent =
+      `第${currentSession}立・${currentArrowNum}射目`;
+
+    // ヒートマップ計算
     const withPos = todayShots.filter(s => s.pos_x !== null && s.pos_y !== null);
+    if (withPos.length > 0) {
+      let upperRight = 0, center = 0, lowerLeft = 0;
+      withPos.forEach(s => {
+        const dx   = s.pos_x - 0.5;
+        const dy   = s.pos_y - 0.5;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 0.15)           center++;
+        else if (dx > 0 && dy < 0) upperRight++;
+        else                        lowerLeft++;
+      });
+      const t = withPos.length;
+      heatmapData = [
+        { zone: '名上 (Upper Right)', pct: Math.round(upperRight / t * 100) },
+        { zone: '中心部 (Center)',     pct: Math.round(center     / t * 100) },
+        { zone: '左下 (Lower Left)',   pct: Math.round(lowerLeft  / t * 100) },
+      ];
 
-    if (withPos.length === 0) return;
-
-    // 方向ごとに分類（右上・中心・左下）
-    let upperRight = 0, center = 0, lowerLeft = 0;
-
-    withPos.forEach(s => {
-      const dx = s.pos_x - 0.5;
-      const dy = s.pos_y - 0.5;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist < 0.15) {
-        center++;
-      } else if (dx > 0 && dy < 0) {
-        upperRight++;
-      } else {
-        lowerLeft++;
-      }
-    });
-
-    const total = withPos.length;
-    heatmapData = [
-      { zone: '名上 (Upper Right)', pct: Math.round(upperRight / total * 100) },
-      { zone: '中心部 (Center)',     pct: Math.round(center     / total * 100) },
-      { zone: '左下 (Lower Left)',   pct: Math.round(lowerLeft  / total * 100) },
-    ];
-
-    // 既存の着弾点をCanvas用に変換
-    shots = withPos.slice(-4).map(s => ({
-      tab:    s.arrow_type,
-      x:      s.pos_x,
-      y:      s.pos_y,
-      result: s.result ? 'atari' : 'hazure',
-      label:  s.result ? '的中' : '失中',
-    }));
+      // 直近4射をCanvas用に変換
+      shots = withPos.slice(-4).map(s => ({
+        tab:    s.arrow_type,
+        x:      s.pos_x,
+        y:      s.pos_y,
+        result: s.result ? 'atari' : 'hazure',
+        label:  s.result ? '的中' : '失中',
+      }));
+    }
 
   } catch (error) {
-    console.error('ヒートマップデータ取得エラー:', error);
+    console.error('データ取得エラー:', error);
   }
 }
 
@@ -103,7 +130,6 @@ function drawMato() {
     { r: R * 0.50, color: '#e0ede6', stroke: '#aaa' },
     { r: R * 0.25, color: '#2d7a5f', stroke: '#1a4a3a' },
   ];
-
   rings.forEach(ring => {
     ctx.beginPath();
     ctx.arc(cx, cy, ring.r, 0, Math.PI * 2);
@@ -120,9 +146,7 @@ function drawMato() {
   ctx.fill();
 
   shots.forEach((shot, i) => {
-    const px = shot.x * canvas.width;
-    const py = shot.y * canvas.height;
-    drawMarker(px, py, shot.result, i === shots.length - 1);
+    drawMarker(shot.x * canvas.width, shot.y * canvas.height, shot.result, i === shots.length - 1);
   });
 
   if (pendingX !== null) {
@@ -154,24 +178,23 @@ function drawMarker(px, py, result, isHighlighted) {
 }
 
 // ──────────────────────────────
-// Canvasクリック：着弾位置を記録
+// Canvasクリック
 // ──────────────────────────────
 canvas.addEventListener('click', function(e) {
   const rect = canvas.getBoundingClientRect();
-  pendingX = (e.clientX - rect.left)  / rect.width;
-  pendingY = (e.clientY - rect.top)   / rect.height;
+  pendingX = (e.clientX - rect.left) / rect.width;
+  pendingY = (e.clientY - rect.top)  / rect.height;
   updateHint(pendingX, pendingY);
   drawMato();
 });
 
 function updateHint(rx, ry) {
-  const dx   = (rx - 0.5) * 2;
-  const dy   = (ry - 0.5) * 2;
-  const dist = Math.round(Math.sqrt(dx * dx + dy * dy) * 18);
+  const dx    = (rx - 0.5) * 2;
+  const dy    = (ry - 0.5) * 2;
+  const dist  = Math.round(Math.sqrt(dx * dx + dy * dy) * 18);
   const angle = Math.round(Math.atan2(-dy, dx) * (180 / Math.PI));
   const clock = angleToClock(angle);
-  document.querySelector('.mato-hint').textContent =
-    `● 中心から${dist}cm・${clock}方向`;
+  document.querySelector('.mato-hint').textContent = `● 中心から${dist}cm・${clock}方向`;
 }
 
 function angleToClock(deg) {
@@ -189,7 +212,6 @@ async function recordResult(result) {
   try {
     const today = new Date().toISOString().split('T')[0];
 
-    // Supabaseに保存
     await saveShot({
       shot_date:   today,
       session_num: currentSession,
@@ -200,15 +222,9 @@ async function recordResult(result) {
       pos_y:       y,
     });
 
-    // 画面に追加
-    shots.push({
-      tab: currentTab,
-      x, y,
-      result,
-      label: result === 'atari' ? '的中' : '失中',
-    });
+    shots.push({ tab: currentTab, x, y, result, label: result === 'atari' ? '的中' : '失中' });
 
-    // 矢番号を進める
+    // 矢番号・立ちを進める
     currentArrowNum++;
     if (currentArrowNum > 4) {
       currentArrowNum = 1;
@@ -218,8 +234,8 @@ async function recordResult(result) {
     pendingX = null;
     pendingY = null;
 
-    // ヒートマップ再計算
-    await loadTodayHeatmap();
+    // 画面を再描画
+    await loadTodayData();
     drawMato();
     renderShotHistory();
     renderHeatmap();
@@ -251,8 +267,7 @@ function renderShotHistory() {
     const isCurrent   = shot.current;
     const tabLabel    = shot.tab === 'haya' ? 'Haya' : 'Otoya';
     const shotNum     = isCurrent ? 'CURRENT' : `SHOT ${i + 1}`;
-    const resultClass = shot.result === 'atari'  ? 'hit'
-                      : shot.result === 'hazure' ? 'miss' : 'pending';
+    const resultClass = shot.result === 'atari' ? 'hit' : shot.result === 'hazure' ? 'miss' : 'pending';
 
     return `
       <div class="shot-chip ${isCurrent ? 'current' : ''}">
@@ -269,6 +284,12 @@ function renderShotHistory() {
 // ──────────────────────────────
 function renderHeatmap() {
   const list = document.getElementById('heatmap-list');
+
+  if (heatmapData.every(d => d.pct === 0)) {
+    list.innerHTML = '<p style="font-size:12px;color:#999;">着弾データがまだありません。的をクリックして記録してください。</p>';
+    return;
+  }
+
   list.innerHTML = heatmapData.map(item => `
     <div class="heatmap-item">
       <div class="heatmap-row">
@@ -281,7 +302,7 @@ function renderHeatmap() {
     </div>
   `).join('') + `
     <p class="heatmap-note">
-      ⚠ 分析：名上への集中傾向があります。押し手を意識し、引き込みを確認してください。
+      ⚠ 分析：着弾傾向を確認し、押し手と引き込みを意識して練習しましょう。
     </p>
   `;
 }

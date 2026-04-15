@@ -2,34 +2,23 @@
 // KYUDO DOJO - ダッシュボード
 // ===========================
 
-// ──────────────────────────────
-// 状態管理
-// ──────────────────────────────
-
-// 現在の立ち番号
 let currentSession = 1;
-
-// 現在の矢の状態（null=未入力, true=的中, false=失中）
 let arrows = [null, null, null, null];
-
-// 今日のセッションデータ（Supabaseから取得して更新）
 let sessions = [];
 
 // ──────────────────────────────
 // ページ読み込み時の処理
 // ──────────────────────────────
 async function init() {
-  // ログインチェック
   const user = await getCurrentUser();
   if (!user) {
     window.location.href = 'login.html';
     return;
   }
 
-  // 今日のデータをSupabaseから取得
   await loadTodayData();
   renderArrows();
-  renderLogs();
+  await renderLogs(); // ← 実データに変更
 }
 
 // ──────────────────────────────
@@ -39,7 +28,6 @@ async function loadTodayData() {
   try {
     const shots = await getTodayShots();
 
-    // セッションごとに集計
     const sessionMap = {};
     shots.forEach(shot => {
       if (!sessionMap[shot.session_num]) {
@@ -49,14 +37,12 @@ async function loadTodayData() {
       if (shot.result) sessionMap[shot.session_num].hits++;
     });
 
-    // sessionsを更新
     sessions = Object.entries(sessionMap).map(([num, data]) => ({
       label: `SESSION ${num}`,
       hits:  data.hits,
       total: data.total,
     }));
 
-    // 現在の立ち番号を更新
     currentSession = Object.keys(sessionMap).length + 1;
 
     renderSessions();
@@ -65,7 +51,6 @@ async function loadTodayData() {
 
   } catch (error) {
     console.error('データ取得エラー:', error);
-    // エラー時はダミーデータで表示
     renderSessions();
     renderAccuracy();
   }
@@ -133,7 +118,6 @@ function renderArrows() {
 
 // ──────────────────────────────
 // 矢ボタンをクリック
-// null → true → false → null
 // ──────────────────────────────
 function toggleArrow(index) {
   if (arrows[index] === null)       arrows[index] = true;
@@ -152,37 +136,34 @@ async function saveRecord() {
     return;
   }
 
-  const btn  = document.querySelector('.btn-save');
+  const btn = document.querySelector('.btn-save');
   btn.textContent = '保存中...';
   btn.disabled    = true;
 
   try {
     const today = new Date().toISOString().split('T')[0];
 
-    // 矢1本ずつSupabaseに保存
     for (let i = 0; i < arrows.length; i++) {
       if (arrows[i] === null) continue;
-
       await saveShot({
         shot_date:   today,
         session_num: currentSession,
         arrow_num:   i + 1,
-        arrow_type:  i % 2 === 0 ? 'haya' : 'otoya', // 1,3本目=甲矢 / 2,4本目=乙矢
+        arrow_type:  i % 2 === 0 ? 'haya' : 'otoya',
         result:      arrows[i],
         pos_x:       null,
         pos_y:       null,
       });
     }
 
-    // 保存成功
     const hits = arrows.filter(a => a === true).length;
     alert(`保存しました！${hits}/${recorded.length}中`);
 
-    // 矢をリセットして次の立ちへ
     arrows = [null, null, null, null];
     currentSession++;
     await loadTodayData();
     renderArrows();
+    await renderLogs();
 
   } catch (error) {
     alert('保存に失敗しました：' + error.message);
@@ -194,36 +175,66 @@ async function saveRecord() {
 }
 
 // ──────────────────────────────
-// 練習ログを描画（ダミーデータ）
-// 後でSupabaseから取得するように変更予定
+// 練習ログをSupabaseの実データで描画
 // ──────────────────────────────
-function renderLogs() {
-  const logs = [
-    { month: 'OCT', day: 24, title: '午後の稽古', detail: '20射 16中｜中率 80%', dots: [true, true, true, false] },
-    { month: 'OCT', day: 22, title: '朝の稽古',   detail: '12射 9中｜中率 75%',  dots: [true, true, false, true] },
-    { month: 'OCT', day: 20, title: '道場練習',   detail: '16射 10中｜中率 63%', dots: [true, false, true, false] },
-  ];
-
+async function renderLogs() {
   const list = document.getElementById('log-list');
-  list.innerHTML = logs.map(log => {
-    const dots = log.dots.map(hit =>
-      `<div class="dot ${hit ? 'hit' : 'miss'}"></div>`
-    ).join('');
-    return `
-      <div class="log-item">
-        <div class="log-date">
-          <span class="log-month">${log.month}</span>
-          <span class="log-day">${log.day}</span>
+
+  try {
+    // 過去30日のデータを取得して日別に集計
+    const shots = await getRecentShots(30);
+
+    if (shots.length === 0) {
+      list.innerHTML = '<p style="font-size:13px;color:#999;padding:12px 0;">練習ログがまだありません</p>';
+      return;
+    }
+
+    // 日付ごとにグループ化
+    const dayMap = {};
+    shots.forEach(shot => {
+      const date = shot.shot_date;
+      if (!dayMap[date]) dayMap[date] = { hits: 0, total: 0, results: [] };
+      dayMap[date].total++;
+      if (shot.result) dayMap[date].hits++;
+      dayMap[date].results.push(shot.result);
+    });
+
+    // 日付の降順で最新3日を表示
+    const days = Object.entries(dayMap)
+      .sort(([a], [b]) => b.localeCompare(a))
+      .slice(0, 3);
+
+    list.innerHTML = days.map(([date, data]) => {
+      const d     = new Date(date);
+      const month = d.toLocaleString('en', { month: 'short' }).toUpperCase();
+      const day   = d.getDate();
+      const pct   = Math.round(data.hits / data.total * 100);
+
+      // 直近4射分のドットを表示
+      const dots = data.results.slice(-4).map(hit =>
+        `<div class="dot ${hit ? 'hit' : 'miss'}"></div>`
+      ).join('');
+
+      return `
+        <div class="log-item">
+          <div class="log-date">
+            <span class="log-month">${month}</span>
+            <span class="log-day">${day}</span>
+          </div>
+          <div class="log-bar"></div>
+          <div class="log-info">
+            <p class="log-title">練習記録</p>
+            <p class="log-detail">${data.total}射 ${data.hits}中｜中率 ${pct}%</p>
+          </div>
+          <div class="log-dots">${dots}</div>
         </div>
-        <div class="log-bar"></div>
-        <div class="log-info">
-          <p class="log-title">${log.title}</p>
-          <p class="log-detail">${log.detail}</p>
-        </div>
-        <div class="log-dots">${dots}</div>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('');
+
+  } catch (error) {
+    console.error('ログ取得エラー:', error);
+    list.innerHTML = '<p style="font-size:13px;color:#999;padding:12px 0;">ログの取得に失敗しました</p>';
+  }
 }
 
 // ──────────────────────────────

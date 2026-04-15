@@ -77,19 +77,17 @@
         <!-- セッション情報 -->
         <div class="session-info">
           <span class="session-badge">CURRENT SESSION</span>
-          <p class="session-name">第3立・4射目</p>
-
-          <!-- 甲矢 / 乙矢 タブ -->
+          <p class="session-name" id="session-name">読み込み中...</p>
           <div class="arrow-tabs">
-            <button class="tab active" onclick="switchTab(this, 'haya')" id="tab-haya">甲矢 (Haya)</button>
-            <button class="tab" onclick="switchTab(this, 'otoya')" id="tab-otoya">乙矢 (Otoya)</button>
+            <button class="tab active" onclick="switchTab(this, 'haya')">甲矢 (Haya)</button>
+            <button class="tab" onclick="switchTab(this, 'otoya')">乙矢 (Otoya)</button>
           </div>
         </div>
 
-        <!-- 的（クリックで位置を記録） -->
+        <!-- 的 -->
         <div class="mato-wrap">
           <canvas id="mato-canvas" width="280" height="280"></canvas>
-          <p class="mato-hint">● 中心から12cm・1時方向</p>
+          <p class="mato-hint">的をクリックして着弾位置を記録してください</p>
         </div>
 
         <!-- 的中 / 失中ボタン -->
@@ -104,14 +102,14 @@
           </button>
         </div>
 
-        <!-- 射履歴（直近） -->
+        <!-- 射履歴 -->
         <div class="shot-history" id="shot-history"></div>
       </div>
 
       <!-- 右：分析パネル -->
       <div class="mato-right">
 
-        <!-- ヒートマップ分析 -->
+        <!-- ヒートマップ -->
         <div class="panel">
           <h3 class="panel-title">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
@@ -120,32 +118,31 @@
           <div class="heatmap-list" id="heatmap-list"></div>
         </div>
 
-        <!-- 本日の統計 -->
+        <!-- 本日の統計（実データ） -->
         <div class="panel">
           <h3 class="panel-title">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
             本日の統計
-            <span class="panel-toggle">∧</span>
           </h3>
           <div class="stats-grid">
             <div class="stat-box">
               <p class="stat-label">HIT RATE</p>
-              <p class="stat-val">75<span class="stat-unit">%</span></p>
+              <p class="stat-val" id="stat-hitrate">-<span class="stat-unit">%</span></p>
             </div>
             <div class="stat-box">
               <p class="stat-label">TOTAL SHOTS</p>
-              <p class="stat-val">24</p>
+              <p class="stat-val" id="stat-total">-</p>
             </div>
             <div class="stat-box">
-              <p class="stat-label">AVG DISTANCE</p>
-              <p class="stat-val">8.4<span class="stat-unit">cm</span></p>
+              <p class="stat-label">HITS</p>
+              <p class="stat-val" id="stat-hits">-</p>
             </div>
             <div class="stat-box">
               <p class="stat-label">SESSIONS</p>
-              <p class="stat-val">3</p>
+              <p class="stat-val" id="stat-sessions">-</p>
             </div>
           </div>
-          <button class="btn-report">詳細レポートを表示</button>
+          <button class="btn-report" onclick="window.location.href='stats.html'">詳細レポートを表示</button>
         </div>
 
         <!-- 今日の知恵 -->
@@ -153,7 +150,7 @@
           <div class="wisdom-img">🏹</div>
           <div>
             <p class="wisdom-label">DAILY WISDOM</p>
-            <p class="wisdom-text">「正射必中」－正しく射られた矢は、必ず的に当たる。</p>
+            <p class="wisdom-text" id="daily-wisdom">「正射必中」－正しく射られた矢は、必ず的に当たる。</p>
           </div>
         </div>
 

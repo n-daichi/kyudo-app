@@ -66,41 +66,39 @@
       </div>
     </header>
 
-    <!-- サマリーカード -->
+    <!-- サマリーカード（JSで値を埋める） -->
     <div class="summary-row">
       <div class="summary-card">
         <p class="summary-label">WEEKLY SUMMARY</p>
-        <p class="summary-big">72.5 <span class="summary-unit">%</span></p>
-        <p class="summary-diff up">▲ 先週比 +4.2%</p>
-        <p class="summary-detail">今週の記録：120射 / 的中：87.6</p>
+        <p class="summary-big" id="week-pct">- <span class="summary-unit">%</span></p>
+        <p class="summary-diff" id="week-diff"></p>
+        <p class="summary-detail" id="week-detail">読み込み中...</p>
       </div>
       <div class="summary-card">
         <p class="summary-label">MONTHLY SUMMARY</p>
-        <p class="summary-big">68.1 <span class="summary-unit">%</span></p>
-        <p class="summary-diff down">▼ 先月比 -1.5%</p>
-        <p class="summary-detail">今月の記録：150射 / 的中：127.6</p>
+        <p class="summary-big" id="month-pct">- <span class="summary-unit">%</span></p>
+        <p class="summary-diff" id="month-diff"></p>
+        <p class="summary-detail" id="month-detail">読み込み中...</p>
       </div>
       <div class="summary-card best">
         <div class="best-badge">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
           BEST PERFORMANCE
         </div>
-        <p class="best-num">12 <span class="best-unit">連射的中</span></p>
-        <p class="best-date">記録日：2023年10月5日</p>
+        <p class="best-num" id="best-streak">- <span class="best-unit">連射的中</span></p>
+        <p class="best-date" id="best-date">記録なし</p>
       </div>
     </div>
 
     <!-- グラフ + 矢別分析 -->
     <div class="chart-row">
-
-      <!-- 的中率グラフ -->
       <div class="chart-card">
         <div class="chart-header">
           <div class="chart-title-row">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green-mid)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            <span class="chart-title">的中率推移（過去30日間）</span>
+            <span class="chart-title">的中率推移</span>
           </div>
-          <select class="chart-select" onchange="updateChart(this.value)">
+          <select class="chart-select">
             <option value="30">過去30日</option>
             <option value="7">過去7日</option>
             <option value="90">過去90日</option>
@@ -110,16 +108,15 @@
         <div class="chart-x-labels" id="chart-x"></div>
       </div>
 
-      <!-- 矢別的中分析 -->
       <div class="arrow-analysis-card">
         <h3 class="chart-title" style="margin-bottom:16px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           矢別的中率分析
         </h3>
         <div class="arrow-bars" id="arrow-bars"></div>
-        <div class="arrow-note">
+        <div class="arrow-note" id="arrow-note" style="display:none;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          分析：4本目の筆力が低下傾向にあります。残心の意識を保ちましょう。
+          <span id="arrow-note-text"></span>
         </div>
       </div>
     </div>
@@ -128,25 +125,24 @@
     <div class="bottom-row">
       <div class="tendency-card">
         <div class="tendency-visual">
-          <!-- 的のミニ表示 -->
           <canvas id="mini-mato" width="80" height="80"></canvas>
         </div>
         <div class="tendency-text">
           <h3 class="chart-title">的中傾向分析</h3>
-          <p class="tendency-desc">着弾点は中心右側（約2時）に集中しています。安定した手の内の力のかけ方が継続できています。</p>
+          <p class="tendency-desc" id="tendency-desc">データを読み込んでいます...</p>
         </div>
       </div>
 
       <div class="mini-stat-card">
         <p class="mini-stat-label">平均矢数/日</p>
-        <p class="mini-stat-val">24.5 <span class="mini-stat-unit">本</span></p>
-        <p class="mini-stat-sub">平均的な射手の1.2倍（要→平均に近い）</p>
+        <p class="mini-stat-val" id="avg-shots">-<span class="mini-stat-unit">本</span></p>
+        <p class="mini-stat-sub" id="avg-shots-sub"></p>
       </div>
 
       <div class="mini-stat-card">
-        <p class="mini-stat-label">射のリズム</p>
-        <p class="mini-stat-val">42 <span class="mini-stat-unit">sec</span></p>
-        <p class="mini-stat-sub">平均的な射手の間隔（要→平均より速い）</p>
+        <p class="mini-stat-label">練習日数</p>
+        <p class="mini-stat-val" id="practice-days">-<span class="mini-stat-unit">日</span></p>
+        <p class="mini-stat-sub" id="practice-days-sub">過去30日間</p>
       </div>
     </div>
 
