@@ -7,7 +7,18 @@ let arrows = [null, null, null, null];
 let sessions = [];
 
 // ──────────────────────────────
-// ページ読み込み時の処理
+// 日付をローカルタイムで取得（タイムゾーンバグ修正）
+// ──────────────────────────────
+function getLocalDateStr() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+// ──────────────────────────────
+// 初期化
 // ──────────────────────────────
 async function init() {
   const user = await getCurrentUser();
@@ -16,9 +27,23 @@ async function init() {
     return;
   }
 
+  // サイドバー・アバターにメールの頭文字を表示
+  const initial = user.email ? user.email[0].toUpperCase() : '弓';
+  document.getElementById('sidebar-avatar').textContent = initial;
+  document.getElementById('header-avatar').textContent  = initial;
+  document.getElementById('sidebar-name').textContent   = user.email || 'Kyudojin';
+
   await loadTodayData();
   renderArrows();
-  await renderLogs(); // ← 実データに変更
+  await renderLogs();
+}
+
+// ──────────────────────────────
+// サインアウト
+// ──────────────────────────────
+async function handleSignOut(e) {
+  e.preventDefault();
+  await signOut();
 }
 
 // ──────────────────────────────
@@ -37,23 +62,43 @@ async function loadTodayData() {
       if (shot.result) sessionMap[shot.session_num].hits++;
     });
 
-    sessions = Object.entries(sessionMap).map(([num, data]) => ({
-      label: `SESSION ${num}`,
-      hits:  data.hits,
-      total: data.total,
-    }));
+    sessions = Object.entries(sessionMap)
+      .sort(([a], [b]) => Number(a) - Number(b))
+      .map(([num, data]) => ({
+        label: `SESSION ${num}`,
+        hits:  data.hits,
+        total: data.total,
+      }));
 
     currentSession = Object.keys(sessionMap).length + 1;
 
     renderSessions();
     renderAccuracy();
     updateRecordSub();
+    updateFormStatus(shots);
 
   } catch (error) {
     console.error('データ取得エラー:', error);
     renderSessions();
     renderAccuracy();
   }
+}
+
+// ──────────────────────────────
+// 射形ステータスを更新
+// ──────────────────────────────
+function updateFormStatus(shots) {
+  if (shots.length === 0) {
+    document.getElementById('form-status').textContent = '記録なし';
+    return;
+  }
+  const recent = shots.slice(-4);
+  const hits = recent.filter(s => s.result).length;
+  const pct  = hits / recent.length;
+  const status = pct >= 0.75 ? '安定した射位'
+               : pct >= 0.5  ? '調整が必要'
+               : '要集中';
+  document.getElementById('form-status').textContent = status;
 }
 
 // ──────────────────────────────
@@ -106,7 +151,6 @@ function renderArrows() {
     if (state === true)       { label = '○'; className = 'arrow-btn state-hit'; }
     else if (state === false) { label = '×'; className = 'arrow-btn state-miss'; }
     else                      { label = i + 1; className = 'arrow-btn'; }
-
     return `
       <button class="${className}" onclick="toggleArrow(${i})">
         ${label}
@@ -116,9 +160,6 @@ function renderArrows() {
   }).join('');
 }
 
-// ──────────────────────────────
-// 矢ボタンをクリック
-// ──────────────────────────────
 function toggleArrow(index) {
   if (arrows[index] === null)       arrows[index] = true;
   else if (arrows[index] === true)  arrows[index] = false;
@@ -141,7 +182,7 @@ async function saveRecord() {
   btn.disabled    = true;
 
   try {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getLocalDateStr(); // タイムゾーン修正
 
     for (let i = 0; i < arrows.length; i++) {
       if (arrows[i] === null) continue;
@@ -175,13 +216,12 @@ async function saveRecord() {
 }
 
 // ──────────────────────────────
-// 練習ログをSupabaseの実データで描画
+// 練習ログをSupabaseの実データで描画（タイムゾーン修正）
 // ──────────────────────────────
 async function renderLogs() {
   const list = document.getElementById('log-list');
 
   try {
-    // 過去30日のデータを取得して日別に集計
     const shots = await getRecentShots(30);
 
     if (shots.length === 0) {
@@ -189,7 +229,6 @@ async function renderLogs() {
       return;
     }
 
-    // 日付ごとにグループ化
     const dayMap = {};
     shots.forEach(shot => {
       const date = shot.shot_date;
@@ -199,18 +238,18 @@ async function renderLogs() {
       dayMap[date].results.push(shot.result);
     });
 
-    // 日付の降順で最新3日を表示
     const days = Object.entries(dayMap)
       .sort(([a], [b]) => b.localeCompare(a))
       .slice(0, 3);
 
     list.innerHTML = days.map(([date, data]) => {
-      const d     = new Date(date);
-      const month = d.toLocaleString('en', { month: 'short' }).toUpperCase();
-      const day   = d.getDate();
+      // タイムゾーンずれ修正：文字列を直接パース
+      const [, m, d] = date.split('-');
+      const monthNames = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const month = monthNames[parseInt(m)];
+      const day   = parseInt(d);
       const pct   = Math.round(data.hits / data.total * 100);
 
-      // 直近4射分のドットを表示
       const dots = data.results.slice(-4).map(hit =>
         `<div class="dot ${hit ? 'hit' : 'miss'}"></div>`
       ).join('');
@@ -237,7 +276,4 @@ async function renderLogs() {
   }
 }
 
-// ──────────────────────────────
-// 初期化
-// ──────────────────────────────
 init();

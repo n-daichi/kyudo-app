@@ -2,82 +2,24 @@
    KYUDO DOJO - 的の位置記録
    =========================== */
 
-.page-sub {
-  font-size: 12px;
-  color: var(--text-sub);
-  margin-top: 2px;
-  font-style: italic;
-}
+.page-sub { font-size: 12px; color: var(--text-sub); margin-top: 2px; font-style: italic; }
 
-/* ── 2カラムレイアウト ── */
-.mato-layout {
-  display: grid;
-  grid-template-columns: 1fr 260px;
-  gap: 20px;
-  align-items: start;
-}
+.mato-layout { display: grid; grid-template-columns: 1fr 260px; gap: 20px; align-items: start; }
+.mato-left   { display: flex; flex-direction: column; gap: 16px; }
 
-/* ── 左エリア ── */
-.mato-left {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+.session-info { background: white; border-radius: var(--radius); padding: 18px 22px; box-shadow: var(--shadow-sm); animation: fadeUp 0.3s ease both; }
+.session-badge { font-size: 10px; letter-spacing: 1.5px; color: var(--text-sub); text-transform: uppercase; font-weight: 600; }
+.session-name  { font-size: 18px; font-weight: 700; margin: 4px 0 14px; color: var(--text-main); }
 
-/* ── セッション情報 ── */
-.session-info {
-  background: white;
-  border-radius: var(--radius);
-  padding: 18px 22px;
-  box-shadow: var(--shadow-sm);
-  animation: fadeUp 0.3s ease both;
-}
-
-.session-badge {
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  color: var(--text-sub);
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.session-name {
-  font-size: 18px;
-  font-weight: 700;
-  margin: 4px 0 14px;
-  color: var(--text-main);
-}
-
-/* 甲矢・乙矢タブ */
-.arrow-tabs {
-  display: flex;
-  gap: 8px;
-}
-
-.tab {
-  padding: 7px 18px;
-  border-radius: 8px;
-  border: 1.5px solid var(--gray-2);
-  background: white;
-  font-size: 13px;
-  font-family: 'Noto Sans JP', sans-serif;
-  color: var(--text-sub);
-  cursor: pointer;
-  transition: all 0.15s;
-}
+.arrow-tabs { display: flex; gap: 8px; }
+.tab { padding: 7px 18px; border-radius: 8px; border: 1.5px solid var(--gray-2); background: white; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; color: var(--text-sub); cursor: pointer; transition: all 0.15s; }
 .tab:hover  { border-color: var(--green-mid); color: var(--green-mid); }
-.tab.active {
-  background: var(--navy);
-  border-color: var(--navy);
-  color: white;
-  font-weight: 600;
-}
+.tab.active { background: var(--navy); border-color: var(--navy); color: white; font-weight: 600; }
 
-/* ── 的キャンバス ── */
 .mato-wrap {
   background: white;
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -86,220 +28,84 @@
   animation: fadeUp 0.3s 0.05s ease both;
 }
 
-#mato-canvas {
-  cursor: crosshair;
-  border-radius: 50%;
-}
-
-.mato-hint {
-  font-size: 11px;
-  color: var(--text-sub);
-}
-
-/* ── 的中・失中ボタン ── */
-.result-btns {
-  display: flex;
-  gap: 12px;
-  animation: fadeUp 0.3s 0.1s ease both;
-}
-
-.btn-atari,
-.btn-hazure {
-  flex: 1;
-  padding: 13px;
-  border-radius: 10px;
-  border: none;
-  font-size: 14px;
-  font-family: 'Noto Sans JP', sans-serif;
-  font-weight: 600;
-  cursor: pointer;
+/* 的の外側（的中外れの記録用）もクリックできるエリア */
+.mato-click-area {
+  position: relative;
+  width: 320px;
+  height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: opacity 0.15s, transform 0.1s;
+  cursor: crosshair;
+  background: #f8faf9;
+  border-radius: 16px;
+  border: 2px dashed var(--gray-2);
 }
-.btn-atari:hover,
-.btn-hazure:hover { opacity: 0.88; transform: translateY(-1px); }
-.btn-atari:active,
-.btn-hazure:active { transform: translateY(0); }
 
+#mato-canvas {
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* クリック位置プレビューマーカー */
+.click-preview {
+  position: absolute;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: rgba(240,165,0,0.8);
+  border: 2px solid white;
+  box-shadow: 0 0 8px rgba(240,165,0,0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  display: none;
+}
+
+.mato-hint { font-size: 11px; color: var(--text-sub); text-align: center; }
+
+.result-btns { display: flex; gap: 12px; animation: fadeUp 0.3s 0.1s ease both; }
+.btn-atari, .btn-hazure { flex: 1; padding: 13px; border-radius: 10px; border: none; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.15s, transform 0.1s; }
+.btn-atari:hover, .btn-hazure:hover { opacity: 0.88; transform: translateY(-1px); }
 .btn-atari  { background: var(--green-mid); color: white; }
 .btn-hazure { background: var(--gray-1); color: var(--text-sub); border: 1.5px solid var(--gray-2); }
 
-/* ── 射履歴 ── */
-.shot-history {
-  background: white;
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  animation: fadeUp 0.3s 0.15s ease both;
-  min-height: 60px;
-}
-
-.shot-chip {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1.5px solid var(--gray-2);
-  background: var(--gray-1);
-  font-size: 11px;
-  min-width: 60px;
-}
-.shot-chip.current {
-  border-color: var(--navy);
-  background: white;
-}
+.shot-history { background: white; border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow-sm); display: flex; gap: 10px; flex-wrap: wrap; animation: fadeUp 0.3s 0.15s ease both; min-height: 60px; }
+.shot-chip { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 12px; border-radius: 8px; border: 1.5px solid var(--gray-2); background: var(--gray-1); font-size: 11px; min-width: 60px; }
+.shot-chip.current { border-color: var(--navy); background: white; }
 .shot-chip.current .chip-shot-label { color: var(--navy); font-weight: 700; }
-
-.chip-shot-label { font-size: 10px; color: var(--text-sub); font-weight: 600; }
-.chip-shot-result {
-  font-size: 13px;
-  font-weight: 700;
-}
-.chip-shot-result.hit  { color: var(--green-mid); }
-.chip-shot-result.miss { color: var(--gray-3); }
+.chip-shot-label  { font-size: 10px; color: var(--text-sub); font-weight: 600; }
+.chip-shot-result { font-size: 13px; font-weight: 700; }
+.chip-shot-result.hit     { color: var(--green-mid); }
+.chip-shot-result.miss    { color: var(--gray-3); }
 .chip-shot-result.pending { color: var(--text-sub); }
 .chip-shot-sub { font-size: 10px; color: var(--text-sub); }
 
-/* ── 右パネル共通 ── */
-.mato-right {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+.mato-right { display: flex; flex-direction: column; gap: 14px; }
+.panel { background: white; border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow-sm); animation: fadeUp 0.3s 0.1s ease both; }
+.panel-title { font-size: 13px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
 
-.panel {
-  background: white;
-  border-radius: var(--radius);
-  padding: 18px 20px;
-  box-shadow: var(--shadow-sm);
-  animation: fadeUp 0.3s 0.1s ease both;
-}
-
-.panel-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 14px;
-}
-
-.panel-toggle {
-  margin-left: auto;
-  font-size: 11px;
-  color: var(--text-sub);
-  cursor: pointer;
-}
-
-/* ── ヒートマップリスト ── */
-.heatmap-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
+.heatmap-list { display: flex; flex-direction: column; gap: 10px; }
 .heatmap-item { display: flex; flex-direction: column; gap: 4px; }
-
-.heatmap-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+.heatmap-row  { display: flex; align-items: center; justify-content: space-between; }
 .heatmap-zone { font-size: 12px; color: var(--text-main); }
 .heatmap-pct  { font-size: 12px; font-weight: 700; color: var(--text-main); }
+.heatmap-bar-bg   { height: 6px; background: var(--gray-1); border-radius: 3px; overflow: hidden; }
+.heatmap-bar-fill { height: 100%; border-radius: 3px; background: var(--green-mid); transition: width 0.6s ease; }
+.heatmap-note { margin-top: 10px; font-size: 11px; color: #c0392b; background: #fdecea; border-radius: 6px; padding: 8px 10px; line-height: 1.5; }
 
-.heatmap-bar-bg {
-  height: 6px;
-  background: var(--gray-1);
-  border-radius: 3px;
-  overflow: hidden;
-}
-.heatmap-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  background: var(--green-mid);
-  transition: width 0.6s ease;
-}
-
-.heatmap-note {
-  margin-top: 10px;
-  font-size: 11px;
-  color: #c0392b;
-  background: #fdecea;
-  border-radius: 6px;
-  padding: 8px 10px;
-  line-height: 1.5;
-}
-
-/* ── 統計グリッド ── */
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.stat-box {
-  background: var(--gray-1);
-  border-radius: 8px;
-  padding: 10px 12px;
-}
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.stat-box   { background: var(--gray-1); border-radius: 8px; padding: 10px 12px; }
 .stat-label { font-size: 10px; color: var(--text-sub); letter-spacing: 0.5px; margin-bottom: 4px; }
 .stat-val   { font-family: 'Bebas Neue', sans-serif; font-size: 26px; line-height: 1; color: var(--text-main); }
 .stat-unit  { font-size: 12px; }
 
-.btn-report {
-  width: 100%;
-  padding: 10px;
-  background: white;
-  border: 1.5px solid var(--green-mid);
-  color: var(--green-mid);
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: 'Noto Sans JP', sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-}
+.btn-report { width: 100%; padding: 10px; background: white; border: 1.5px solid var(--green-mid); color: var(--green-mid); border-radius: 8px; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; font-weight: 600; cursor: pointer; transition: background 0.15s; }
 .btn-report:hover { background: var(--green-pale); }
 
-/* ── 今日の知恵 ── */
-.panel-wisdom {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-.wisdom-img {
-  font-size: 28px;
-  flex-shrink: 0;
-  background: var(--gray-1);
-  width: 52px; height: 52px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-}
-.wisdom-label {
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: var(--text-sub);
-  margin-bottom: 4px;
-  font-weight: 600;
-}
-.wisdom-text {
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--text-main);
-}
+.panel-wisdom { display: flex; gap: 12px; align-items: flex-start; }
+.wisdom-img   { font-size: 28px; flex-shrink: 0; background: var(--gray-1); width: 52px; height: 52px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.wisdom-label { font-size: 10px; letter-spacing: 1px; color: var(--text-sub); margin-bottom: 4px; font-weight: 600; }
+.wisdom-text  { font-size: 12px; line-height: 1.6; color: var(--text-main); }
 
-/* ── アニメーション ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
