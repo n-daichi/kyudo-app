@@ -37,14 +37,15 @@
   align-items: center;
   justify-content: center;
   cursor: crosshair;
-  background: #f8faf9;
-  border-radius: 16px;
-  border: 2px dashed var(--gray-2);
+  background: #f0f2f1;
+  border-radius: 14px;
+  border: 2px dashed #c0cbc5;
+  overflow: hidden;
 }
 
 #mato-canvas {
-  border-radius: 50%;
-  pointer-events: none;
+  border-radius: 12px;
+  display: block;
 }
 
 /* クリック位置プレビューマーカー */

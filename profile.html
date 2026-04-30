@@ -68,7 +68,7 @@
       <div class="user-avatar" id="sidebar-avatar">弓</div>
       <div class="user-info">
         <p class="user-name" id="sidebar-name">読み込み中...</p>
-        <p class="user-rank">Rank: Shodan</p>
+        <p class="user-rank" id="sidebar-rank">Rank: Shodan</p>
       </div>
     </a>
     <nav class="sidebar-nav">
@@ -115,7 +115,7 @@
         <div class="profile-avatar-big" id="profile-avatar-big">弓</div>
         <p style="font-size:15px;font-weight:700;margin-bottom:4px;" id="profile-display-name">Kyudojin</p>
         <p class="profile-email" id="profile-email">読み込み中...</p>
-        <span class="profile-rank-badge">Rank: Shodan</span>
+        <span class="profile-rank-badge" id="profile-rank-badge">Rank: Shodan</span>
         <hr class="profile-divider" />
         <div class="profile-stat-row">
           <div class="profile-stat">
@@ -203,19 +203,26 @@
       const user = await getCurrentUser();
       if (!user) { window.location.href = 'login.html'; return; }
 
-      const initial = user.email ? user.email[0].toUpperCase() : '弓';
+      // ローカルストレージから設定を読み込む
+      const saved = JSON.parse(localStorage.getItem('kyudo-profile') || '{}');
+      const displayName = saved.name || user.email || 'Kyudojin';
+      const initial = displayName[0].toUpperCase();
       ['sidebar-avatar','header-avatar','profile-avatar-big'].forEach(id => {
         document.getElementById(id).textContent = initial;
       });
-      document.getElementById('sidebar-name').textContent = user.email || 'Kyudojin';
+      document.getElementById('sidebar-name').textContent = displayName;
       document.getElementById('profile-email').textContent = user.email || '';
+      document.getElementById('profile-display-name').textContent = saved.name || 'Kyudojin';
 
-      // ローカルストレージから設定を読み込む
-      const saved = JSON.parse(localStorage.getItem('kyudo-profile') || '{}');
-      if (saved.name)  { document.getElementById('input-name').value = saved.name; document.getElementById('profile-display-name').textContent = saved.name; }
-      if (saved.rank)    document.getElementById('input-rank').value  = saved.rank;
-      if (saved.dojo)    document.getElementById('input-dojo').value  = saved.dojo;
-      if (saved.bow)     document.getElementById('input-bow').value   = saved.bow;
+      const rankMap = { mudan:'無段', shodan:'初段', nidan:'二段', sandan:'三段', yondan:'四段', godan:'五段', rokudan:'六段' };
+      const rankLabel = rankMap[saved.rank] || '初段';
+      document.getElementById('sidebar-rank').textContent = `Rank: ${rankLabel}`;
+      document.getElementById('profile-rank-badge').textContent = `Rank: ${rankLabel}`;
+
+      if (saved.name)  document.getElementById('input-name').value = saved.name;
+      if (saved.rank)  document.getElementById('input-rank').value = saved.rank;
+      if (saved.dojo)  document.getElementById('input-dojo').value = saved.dojo;
+      if (saved.bow)   document.getElementById('input-bow').value  = saved.bow;
 
       // 統計を取得
       try {
@@ -238,7 +245,17 @@
         bow:  document.getElementById('input-bow').value,
       };
       localStorage.setItem('kyudo-profile', JSON.stringify(profile));
-      if (profile.name) document.getElementById('profile-display-name').textContent = profile.name;
+      const rankMap = { mudan:'無段', shodan:'初段', nidan:'二段', sandan:'三段', yondan:'四段', godan:'五段', rokudan:'六段' };
+      const rankLabel = rankMap[profile.rank] || '初段';
+      const displayName = profile.name || 'Kyudojin';
+      const initial = displayName[0].toUpperCase();
+      document.getElementById('profile-display-name').textContent = displayName;
+      document.getElementById('sidebar-name').textContent = displayName;
+      document.getElementById('sidebar-rank').textContent = `Rank: ${rankLabel}`;
+      document.getElementById('profile-rank-badge').textContent = `Rank: ${rankLabel}`;
+      ['sidebar-avatar','header-avatar','profile-avatar-big'].forEach(id => {
+        document.getElementById(id).textContent = initial;
+      });
       alert('設定を保存しました！');
     }
 

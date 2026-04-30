@@ -170,12 +170,12 @@ function renderSummary(shots30, shots7) {
 // ──────────────────────────────
 function renderChart(dataset) {
   if (!dataset || dataset.length === 0) return;
-  const maxPct  = Math.max(...dataset.map(d => d.pct), 1);
+  
   const chartEl = document.getElementById('bar-chart');
   const xEl     = document.getElementById('chart-x');
 
   chartEl.innerHTML = dataset.map(d => {
-    const h = (d.pct / maxPct) * 100;
+    const h = d.pct; // 100%基準
     return `
       <div class="bar-wrap">
         <div class="bar-tooltip">${d.pct}%</div>

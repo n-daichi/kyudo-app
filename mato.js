@@ -16,7 +16,7 @@ const wisdoms = [
 // 状態管理
 // ──────────────────────────────
 let currentTab      = 'haya';
-let pendingX        = null; // 0〜1（clickAreaに対する比率）
+let pendingX        = null;
 let pendingY        = null;
 let shots           = [];
 let currentSession  = 1;
@@ -28,25 +28,23 @@ let heatmapData = [
   { zone: '左下 (Lower Left)',  pct: 0 },
 ];
 
-// ──────────────────────────────
-// ローカル日付文字列（タイムゾーン修正）
-// ──────────────────────────────
 function getLocalDateStr() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
-// ──────────────────────────────
-// 初期化
-// ──────────────────────────────
 async function init() {
   const user = await getCurrentUser();
   if (!user) { window.location.href = 'login.html'; return; }
 
-  const initial = user.email ? user.email[0].toUpperCase() : '弓';
+  const saved = JSON.parse(localStorage.getItem('kyudo-profile') || '{}');
+  const displayName = saved.name || user.email || 'Kyudojin';
+  const initial = displayName[0].toUpperCase();
   document.getElementById('sidebar-avatar').textContent = initial;
   document.getElementById('header-avatar').textContent  = initial;
-  document.getElementById('sidebar-name').textContent   = user.email || 'Kyudojin';
+  document.getElementById('sidebar-name').textContent   = displayName;
+  const rankMap = { mudan:'無段', shodan:'初段', nidan:'二段', sandan:'三段', yondan:'四段', godan:'五段', rokudan:'六段' };
+  document.getElementById('sidebar-rank').textContent = `Rank: ${rankMap[saved.rank] || '初段'}`;
 
   document.getElementById('daily-wisdom').textContent = wisdoms[new Date().getDate() % wisdoms.length];
 
@@ -61,52 +59,40 @@ async function handleSignOut(e) {
   await signOut();
 }
 
-// ──────────────────────────────
-// 今日のデータを取得して画面更新
-// ──────────────────────────────
 async function loadTodayData() {
   try {
     const todayShots = await getTodayShots();
 
-    const hits     = todayShots.filter(s => s.result).length;
-    const total    = todayShots.length;
-    const hitRate  = total > 0 ? Math.round(hits / total * 100) : 0;
+    const hits         = todayShots.filter(s => s.result).length;
+    const total        = todayShots.length;
+    const hitRate      = total > 0 ? Math.round(hits / total * 100) : 0;
     const sessionCount = new Set(todayShots.map(s => s.session_num)).size;
 
-    document.getElementById('stat-hitrate').innerHTML  = `${hitRate}<span class="stat-unit">%</span>`;
+    document.getElementById('stat-hitrate').innerHTML   = `${hitRate}<span class="stat-unit">%</span>`;
     document.getElementById('stat-total').textContent   = total;
     document.getElementById('stat-hits').textContent    = hits;
     document.getElementById('stat-sessions').textContent = sessionCount;
 
-    // 次の立ち・矢番号を計算
-    // dashboard経由で保存した場合も考慮してセッション番号を同期
     const maxSession = todayShots.length > 0
-      ? Math.max(...todayShots.map(s => s.session_num))
-      : 0;
+      ? Math.max(...todayShots.map(s => s.session_num)) : 0;
     const shotsInLastSession = todayShots.filter(s => s.session_num === maxSession).length;
 
     if (maxSession === 0) {
-      currentSession  = 1;
-      currentArrowNum = 1;
+      currentSession = 1; currentArrowNum = 1;
     } else if (shotsInLastSession >= 4) {
-      currentSession  = maxSession + 1;
-      currentArrowNum = 1;
+      currentSession = maxSession + 1; currentArrowNum = 1;
     } else {
-      currentSession  = maxSession;
-      currentArrowNum = shotsInLastSession + 1;
+      currentSession = maxSession; currentArrowNum = shotsInLastSession + 1;
     }
 
     document.getElementById('session-name').textContent =
       `第${currentSession}立・${currentArrowNum}射目`;
 
-    // ヒートマップ計算
     const withPos = todayShots.filter(s => s.pos_x !== null && s.pos_y !== null);
     if (withPos.length > 0) {
       calcHeatmap(withPos);
-      shots = withPos.slice(-4).map(s => ({
-        tab:    s.arrow_type,
-        x:      s.pos_x,
-        y:      s.pos_y,
+      shots = withPos.slice(-8).map(s => ({
+        tab: s.arrow_type, x: s.pos_x, y: s.pos_y,
         result: s.result ? 'atari' : 'hazure',
         label:  s.result ? '的中' : '失中',
       }));
@@ -116,155 +102,184 @@ async function loadTodayData() {
   }
 }
 
-// ──────────────────────────────
-// ヒートマップ計算（方向修正）
-// pos_x, pos_y は 0〜1（左上が原点）
-// 弓道の的：上が的前（手前）、下が的後（奥）
-// 右上 = x>0.5 かつ y<0.5
-// ──────────────────────────────
 function calcHeatmap(withPos) {
-  let upperRight = 0, center = 0, lowerLeft = 0;
+  // Canvas座標：Y軸は下向き（dy > 0 が画面下 = 的では「下」）
+  // dx > 0 → 右、dx < 0 → 左、dy > 0 → 下、dy < 0 → 上
+  let counts = { upperRight:0, upperLeft:0, lowerRight:0, lowerLeft:0, center:0 };
   withPos.forEach(s => {
-    const dx   = s.pos_x - 0.5; // + = 右
-    const dy   = s.pos_y - 0.5; // + = 下
+    const dx = s.pos_x - 0.5, dy = s.pos_y - 0.5;
     const dist = Math.sqrt(dx * dx + dy * dy);
-
     if (dist < 0.12) {
-      center++;
-    } else if (dx > 0 && dy < 0) {
-      // 右かつ上 → 右上
-      upperRight++;
+      counts.center++;
+    } else if (dx >= 0 && dy < 0) {
+      counts.upperRight++;
+    } else if (dx < 0 && dy < 0) {
+      counts.upperLeft++;
+    } else if (dx >= 0 && dy >= 0) {
+      counts.lowerRight++;
     } else {
-      lowerLeft++;
+      counts.lowerLeft++;
     }
   });
-
   const t = withPos.length;
   heatmapData = [
-    { zone: '右上 (Upper Right)', pct: Math.round(upperRight / t * 100) },
-    { zone: '中心部 (Center)',    pct: Math.round(center     / t * 100) },
-    { zone: '左下 (Lower Left)',  pct: Math.round(lowerLeft  / t * 100) },
-  ];
+    { zone: '右上 (Upper Right)', pct: Math.round(counts.upperRight / t * 100) },
+    { zone: '左上 (Upper Left)',  pct: Math.round(counts.upperLeft  / t * 100) },
+    { zone: '右下 (Lower Right)', pct: Math.round(counts.lowerRight / t * 100) },
+    { zone: '左下 (Lower Left)',  pct: Math.round(counts.lowerLeft  / t * 100) },
+    { zone: '中心部 (Center)',    pct: Math.round(counts.center     / t * 100) },
+  ].filter(d => d.pct > 0);
+  if (heatmapData.length === 0) {
+    heatmapData = [{ zone: '中心部 (Center)', pct: 0 }];
+  }
 }
 
 // ──────────────────────────────
-// Canvas設定
+// Canvas定数
+// 星的（ほしまと）：外枠白丸 + 中央に黒い星（直径12cm / 全体36cm）
+// canvasはclickAreaと同サイズ（320x320）
 // ──────────────────────────────
 const canvas   = document.getElementById('mato-canvas');
 const ctx      = canvas.getContext('2d');
 const CANVAS_W = canvas.width;
 const CANVAS_H = canvas.height;
-const cx = CANVAS_W / 2;
-const cy = CANVAS_H / 2;
-const R  = CANVAS_W / 2 - 4;
+const CANVAS_CX = CANVAS_W / 2;
+const CANVAS_CY = CANVAS_H / 2;
+const MATO_R  = CANVAS_W * 0.44;        // 外枠円半径（canvasいっぱいに）
+const HOSHI_R = MATO_R * (12 / 36);     // 星の半径（実寸比率）
 
 function drawMato() {
   ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
 
-  // 的の輪
-  const rings = [
-    { r: R,        color: '#fff',    stroke: '#ccc' },
-    { r: R * 0.75, color: '#f0f4f2', stroke: '#bbb' },
-    { r: R * 0.50, color: '#e0ede6', stroke: '#aaa' },
-    { r: R * 0.25, color: '#2d7a5f', stroke: '#1a4a3a' },
-  ];
-  rings.forEach(ring => {
-    ctx.beginPath();
-    ctx.arc(cx, cy, ring.r, 0, Math.PI * 2);
-    ctx.fillStyle   = ring.color;
-    ctx.strokeStyle = ring.stroke;
-    ctx.lineWidth   = 1.5;
-    ctx.fill();
-    ctx.stroke();
-  });
+  // グレー背景（的の外エリア）
+  ctx.fillStyle = '#f0f2f1';
+  ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-  // 中心黒点
+  // 外枠の白い大円
   ctx.beginPath();
-  ctx.arc(cx, cy, 4, 0, Math.PI * 2);
-  ctx.fillStyle = '#1a2e3b';
+  ctx.arc(CANVAS_CX, CANVAS_CY, MATO_R, 0, Math.PI * 2);
+  ctx.fillStyle   = '#ffffff';
+  ctx.strokeStyle = '#444444';
+  ctx.lineWidth   = 3;
   ctx.fill();
+  ctx.stroke();
+
+  // 星（黒丸）- 的の中央
+  ctx.beginPath();
+  ctx.arc(CANVAS_CX, CANVAS_CY, HOSHI_R, 0, Math.PI * 2);
+  ctx.fillStyle   = '#1a1a1a';
+  ctx.strokeStyle = '#000000';
+  ctx.lineWidth   = 1.5;
+  ctx.fill();
+  ctx.stroke();
 
   // 着弾マーカー
   shots.forEach((shot, i) => {
     drawMarker(shot.x * CANVAS_W, shot.y * CANVAS_H, shot.result, i === shots.length - 1);
   });
 
-  // ペンディングマーカー（クリック位置）
+  // ペンディングマーカー（クリック位置プレビュー）
   if (pendingX !== null) {
-    // clickAreaに対する比率をcanvas座標に変換
-    const clickArea = document.getElementById('mato-click-area');
-    const areaW = clickArea.offsetWidth;
-    const areaH = clickArea.offsetHeight;
-    const offsetX = (areaW - CANVAS_W) / 2;
-    const offsetY = (areaH - CANVAS_H) / 2;
-    const cx2 = pendingX * areaW - offsetX;
-    const cy2 = pendingY * areaH - offsetY;
-    drawMarker(cx2, cy2, 'pending', true);
-  }
-}
-
-function drawMarker(px, py, result, isHighlighted) {
-  const color = result === 'atari'  ? '#2d7a5f'
-              : result === 'hazure' ? '#9aaa9f'
-              : '#f0a500';
-
-  ctx.beginPath();
-  ctx.arc(px, py, isHighlighted ? 8 : 5, 0, Math.PI * 2);
-  ctx.fillStyle   = color;
-  ctx.globalAlpha = isHighlighted ? 1 : 0.7;
-  ctx.fill();
-  ctx.globalAlpha = 1;
-
-  if (isHighlighted) {
-    ctx.beginPath();
-    ctx.arc(px, py, 13, 0, Math.PI * 2);
-    ctx.strokeStyle = color;
-    ctx.lineWidth   = 2;
-    ctx.globalAlpha = 0.35;
-    ctx.stroke();
-    ctx.globalAlpha = 1;
+    drawMarker(pendingX * CANVAS_W, pendingY * CANVAS_H, 'pending', true);
   }
 }
 
 // ──────────────────────────────
-// クリックエリアのイベント（的の外もOK）
+// マーカー描画
+// 的中(atari)  → 緑●
+// 失中(hazure) → 赤×
+// pending      → オレンジ●
+// ──────────────────────────────
+function drawMarker(px, py, result, isHighlighted) {
+  ctx.save();
+  ctx.lineCap = 'round';
+
+  if (result === 'atari') {
+    const r = isHighlighted ? 8 : 6;
+    ctx.globalAlpha = isHighlighted ? 1 : 0.85;
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#2d7a5f';
+    ctx.fill();
+    if (isHighlighted) {
+      ctx.beginPath();
+      ctx.arc(px, py, r + 5, 0, Math.PI * 2);
+      ctx.strokeStyle = '#2d7a5f';
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.3;
+      ctx.stroke();
+    }
+
+  } else if (result === 'hazure') {
+    const s = isHighlighted ? 9 : 7;
+    ctx.globalAlpha = isHighlighted ? 1 : 0.9;
+    ctx.strokeStyle = '#c0392b';
+    ctx.lineWidth   = isHighlighted ? 3 : 2.5;
+    // 白い背景でXを際立たせる
+    ctx.shadowColor = 'rgba(255,255,255,0.8)';
+    ctx.shadowBlur  = 3;
+    ctx.beginPath();
+    ctx.moveTo(px - s, py - s); ctx.lineTo(px + s, py + s);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px + s, py - s); ctx.lineTo(px - s, py + s);
+    ctx.stroke();
+
+  } else {
+    // pending
+    ctx.globalAlpha = 0.9;
+    ctx.beginPath();
+    ctx.arc(px, py, 8, 0, Math.PI * 2);
+    ctx.fillStyle   = '#f0a500';
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth   = 2;
+    ctx.fill();
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// ──────────────────────────────
+// クリックイベント（canvas全面がクリック可能）
 // ──────────────────────────────
 const clickArea = document.getElementById('mato-click-area');
 
 clickArea.addEventListener('click', function(e) {
-  const rect = this.getBoundingClientRect();
-  // clickAreaに対する比率（0〜1）で保存
-  pendingX = (e.clientX - rect.left)  / rect.width;
-  pendingY = (e.clientY - rect.top)   / rect.height;
-
-  updateHint(pendingX, pendingY, rect.width, rect.height);
+  const rect = canvas.getBoundingClientRect();
+  pendingX = (e.clientX - rect.left) / CANVAS_W;
+  pendingY = (e.clientY - rect.top)  / CANVAS_H;
+  updateHint(pendingX, pendingY);
   drawMato();
 });
 
-// マウス移動でプレビュー表示
 clickArea.addEventListener('mousemove', function(e) {
-  const rect = this.getBoundingClientRect();
-  const rx   = (e.clientX - rect.left)  / rect.width;
-  const ry   = (e.clientY - rect.top)   / rect.height;
-  updateHint(rx, ry, rect.width, rect.height);
+  const rect = canvas.getBoundingClientRect();
+  updateHint((e.clientX - rect.left) / CANVAS_W, (e.clientY - rect.top) / CANVAS_H);
 });
 
-function updateHint(rx, ry, areaW, areaH) {
-  // clickAreaの中心からの距離（cm換算）
-  const dx    = (rx - 0.5) * 2;
-  const dy    = (ry - 0.5) * 2;
-  const dist  = Math.round(Math.sqrt(dx * dx + dy * dy) * 18);
-  const angle = Math.round(Math.atan2(-dy, dx) * (180 / Math.PI));
-  const clock = angleToClock(angle);
-  document.getElementById('mato-hint').textContent =
-    dist < 2
-      ? '● 中心付近'
-      : `● 中心から約${dist}cm・${clock}方向`;
+function updateHint(rx, ry) {
+  const px = rx * CANVAS_W;
+  const py = ry * CANVAS_H;
+  const dx = (px - CANVAS_CX) / MATO_R;
+  const dy = (py - CANVAS_CY) / MATO_R;
+  const distNorm = Math.sqrt(dx * dx + dy * dy);
+  const distCm   = Math.round(distNorm * 18);
+  const angle    = Math.round(Math.atan2(-dy, dx) * (180 / Math.PI));
+  const clock    = angleToClock(angle);
+
+  if (distCm < 2) {
+    document.getElementById('mato-hint').textContent = '● 的の中心付近';
+  } else if (distNorm <= 1) {
+    const inHoshi = distNorm < (12 / 36);
+    document.getElementById('mato-hint').textContent =
+      `● ${inHoshi ? '★ 星の中' : '的の中'}・中心から約${distCm}cm・${clock}方向`;
+  } else {
+    document.getElementById('mato-hint').textContent =
+      `● 的の外側・中心から約${distCm}cm・${clock}方向`;
+  }
 }
 
 function angleToClock(deg) {
-  // 数学角度（右=0°、反時計）→ 時計の時刻
-  // 12時 = 上 = 90°
   let clock = ((90 - deg) / 30 + 12) % 12;
   if (clock <= 0) clock += 12;
   return `${Math.round(clock)}時`;
@@ -274,29 +289,18 @@ function angleToClock(deg) {
 // 的中・失中ボタン → Supabaseに保存
 // ──────────────────────────────
 async function recordResult(result) {
-  // pendingがなければclickAreaの中心（的中心）を使う
   let storeX, storeY;
   if (pendingX !== null) {
-    // clickAreaの比率をcanvasの比率に変換
-    const clickAreaEl = document.getElementById('mato-click-area');
-    const areaW = clickAreaEl.offsetWidth;
-    const areaH = clickAreaEl.offsetHeight;
-    const offsetX = (areaW - CANVAS_W) / 2;
-    const offsetY = (areaH - CANVAS_H) / 2;
-    // canvas上の座標
-    const canvasX = pendingX * areaW - offsetX;
-    const canvasY = pendingY * areaH - offsetY;
-    // canvas比率に変換（0〜1）
-    storeX = Math.max(0, Math.min(1, canvasX / CANVAS_W));
-    storeY = Math.max(0, Math.min(1, canvasY / CANVAS_H));
+    // pendingX/Y はすでにcanvas比率（0〜1）
+    storeX = Math.max(0, Math.min(1, pendingX));
+    storeY = Math.max(0, Math.min(1, pendingY));
   } else {
-    // クリックなし：的中なら中心、外れはランダム
     if (result === 'atari') {
-      storeX = 0.5 + (Math.random() - 0.5) * 0.1;
-      storeY = 0.5 + (Math.random() - 0.5) * 0.1;
+      storeX = 0.5 + (Math.random() - 0.5) * 0.15;
+      storeY = 0.5 + (Math.random() - 0.5) * 0.15;
     } else {
-      storeX = 0.5 + (Math.random() - 0.5) * 0.6;
-      storeY = 0.5 + (Math.random() - 0.5) * 0.6;
+      storeX = 0.5 + (Math.random() - 0.5) * 0.7;
+      storeY = 0.5 + (Math.random() - 0.5) * 0.7;
     }
   }
 
@@ -311,17 +315,13 @@ async function recordResult(result) {
       pos_y:       storeY,
     });
 
-    shots.push({
-      tab: currentTab, x: storeX, y: storeY,
-      result, label: result === 'atari' ? '的中' : '失中',
-    });
+    shots.push({ tab: currentTab, x: storeX, y: storeY,
+      result, label: result === 'atari' ? '的中' : '失中' });
 
-    // 矢番号・立ちを進める
     currentArrowNum++;
     if (currentArrowNum > 4) { currentArrowNum = 1; currentSession++; }
 
-    pendingX = null;
-    pendingY = null;
+    pendingX = null; pendingY = null;
 
     await loadTodayData();
     drawMato();
@@ -334,18 +334,12 @@ async function recordResult(result) {
   }
 }
 
-// ──────────────────────────────
-// タブ切替
-// ──────────────────────────────
 function switchTab(el, tab) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
 }
 
-// ──────────────────────────────
-// 射の履歴チップ
-// ──────────────────────────────
 function renderShotHistory() {
   const container = document.getElementById('shot-history');
   const display   = shots.slice(-4);
@@ -366,9 +360,6 @@ function renderShotHistory() {
   }).join('');
 }
 
-// ──────────────────────────────
-// ヒートマップ描画
-// ──────────────────────────────
 function renderHeatmap() {
   const list = document.getElementById('heatmap-list');
   if (heatmapData.every(d => d.pct === 0)) {
@@ -385,12 +376,7 @@ function renderHeatmap() {
         <div class="heatmap-bar-fill" style="width: ${item.pct}%"></div>
       </div>
     </div>
-  `).join('') + `
-    <p class="heatmap-note">⚠ 押し手と引き込みを意識して練習しましょう。</p>
-  `;
+  `).join('') + `<p class="heatmap-note">⚠ 押し手と引き込みを意識して練習しましょう。</p>`;
 }
 
-// ──────────────────────────────
-// 初期化実行
-// ──────────────────────────────
 init();

@@ -42,7 +42,7 @@
       <div class="user-avatar" id="sidebar-avatar">弓</div>
       <div class="user-info">
         <p class="user-name" id="sidebar-name">読み込み中...</p>
-        <p class="user-rank">Rank: Shodan</p>
+        <p class="user-rank" id="sidebar-rank">Rank: Shodan</p>
       </div>
     </a>
     <nav class="sidebar-nav">
@@ -160,10 +160,14 @@
     async function init() {
       const user = await getCurrentUser();
       if (!user) { window.location.href = 'login.html'; return; }
-      const initial = user.email ? user.email[0].toUpperCase() : '弓';
+      const saved = JSON.parse(localStorage.getItem('kyudo-profile') || '{}');
+      const displayName = saved.name || user.email || 'Kyudojin';
+      const initial = displayName[0].toUpperCase();
       document.getElementById('sidebar-avatar').textContent = initial;
       document.getElementById('header-avatar').textContent  = initial;
-      document.getElementById('sidebar-name').textContent   = user.email || 'Kyudojin';
+      document.getElementById('sidebar-name').textContent   = displayName;
+      const rankMap = { mudan:'無段', shodan:'初段', nidan:'二段', sandan:'三段', yondan:'四段', godan:'五段', rokudan:'六段' };
+      document.getElementById('sidebar-rank').textContent = `Rank: ${rankMap[saved.rank] || '初段'}`;
     }
 
     function toggleFaq(el) {
