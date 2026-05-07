@@ -1,7 +1,10 @@
-/* ===========================
-   KYUDO DOJO - 統計・分析
-   =========================== */
+/* ============================================================
+   stats.css  ―  統計・分析画面専用スタイル
+   ============================================================ */
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   サマリーカード行（週・月・ベスト）
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .summary-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -17,51 +20,16 @@
   animation: fadeUp 0.35s ease both;
 }
 
-.summary-label {
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  color: var(--text-sub);
-  font-weight: 600;
-  margin-bottom: 6px;
-}
+.summary-label  { font-size: 10px; letter-spacing: 1.5px; color: var(--text-sub); font-weight: 600; margin-bottom: 6px; }
+.summary-big    { font-family: 'Bebas Neue', sans-serif; font-size: 42px; line-height: 1; color: var(--text-main); margin-bottom: 6px; }
+.summary-unit   { font-size: 20px; color: var(--text-sub); }
+.summary-diff   { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+.summary-diff.up   { color: var(--green-mid); }
+.summary-diff.down { color: #c0392b; }
+.summary-detail { font-size: 11px; color: var(--text-sub); }
 
-.summary-big {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 42px;
-  line-height: 1;
-  color: var(--text-main);
-  margin-bottom: 6px;
-}
-
-.summary-unit {
-  font-size: 20px;
-  color: var(--text-sub);
-}
-
-.summary-diff {
-  font-size: 12px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.summary-diff.up {
-  color: var(--green-mid);
-}
-
-.summary-diff.down {
-  color: #c0392b;
-}
-
-.summary-detail {
-  font-size: 11px;
-  color: var(--text-sub);
-}
-
-.summary-card.best {
-  background: var(--navy);
-  color: white;
-  animation-delay: 0.1s;
-}
+/* ベストパフォーマンスカード（紺背景） */
+.summary-card.best { background: var(--navy); color: white; animation-delay: 0.1s; }
 
 .best-badge {
   display: flex;
@@ -73,24 +41,13 @@
   margin-bottom: 10px;
 }
 
-.best-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 46px;
-  line-height: 1;
-  color: white;
-  margin-bottom: 6px;
-}
+.best-num  { font-family: 'Bebas Neue', sans-serif; font-size: 46px; line-height: 1; color: white; margin-bottom: 6px; }
+.best-unit { font-size: 18px; color: rgba(255, 255, 255, 0.7); }
+.best-date { font-size: 11px; color: rgba(255, 255, 255, 0.5); }
 
-.best-unit {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.best-date {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   グラフ行（棒グラフ + 矢別分析）
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .chart-row {
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -98,6 +55,7 @@
   margin-bottom: 16px;
 }
 
+/* ── 棒グラフカード ── */
 .chart-card {
   background: white;
   border-radius: var(--radius);
@@ -128,6 +86,7 @@
   gap: 6px;
 }
 
+/* 期間切替セレクト */
 .chart-select {
   font-size: 12px;
   font-family: 'Noto Sans JP', sans-serif;
@@ -140,11 +99,12 @@
   outline: none;
 }
 
+/* 棒グラフ本体 */
 .bar-chart {
   display: flex;
   align-items: flex-end;
   gap: 6px;
-  height: 140px;
+  height: 140px; /* グラフの高さ = 100% の棒の高さ */
   padding-bottom: 4px;
 }
 
@@ -159,19 +119,18 @@
   cursor: pointer;
 }
 
+/* 棒グラフの棒 */
 .bar {
   width: 100%;
   border-radius: 4px 4px 0 0;
   background: var(--green-pale);
   border: 1.5px solid var(--green-light);
-  transition: background 0.2s;
   position: relative;
+  transition: background 0.2s;
 }
+.bar-wrap:hover .bar { background: var(--green-light); }
 
-.bar-wrap:hover .bar {
-  background: var(--green-light);
-}
-
+/* 棒の上の緑ドット */
 .bar-dot {
   width: 7px;
   height: 7px;
@@ -183,6 +142,7 @@
   transform: translateX(-50%);
 }
 
+/* ホバー時に表示するツールチップ（的中率%） */
 .bar-tooltip {
   position: absolute;
   top: -28px;
@@ -198,25 +158,13 @@
   pointer-events: none;
   transition: opacity 0.15s;
 }
+.bar-wrap:hover .bar-tooltip { opacity: 1; }
 
-.bar-wrap:hover .bar-tooltip {
-  opacity: 1;
-}
+/* X軸ラベル */
+.chart-x-labels { display: flex; gap: 6px; margin-top: 6px; }
+.x-label { flex: 1; text-align: center; font-size: 9px; color: var(--text-sub); }
 
-.chart-x-labels {
-  display: flex;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.x-label {
-  flex: 1;
-  text-align: center;
-  font-size: 9px;
-  color: var(--text-sub);
-}
-
-/* 矢別分析 */
+/* ── 矢別分析カード ── */
 .arrow-analysis-card {
   background: white;
   border-radius: var(--radius);
@@ -225,6 +173,7 @@
   animation: fadeUp 0.35s 0.15s ease both;
 }
 
+/* 矢別分析ヘッダー（タイトル + 日付セレクト） */
 .arrow-analysis-header {
   display: flex;
   align-items: center;
@@ -232,35 +181,16 @@
   margin-bottom: 16px;
 }
 
-.arrow-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.arrow-bar-item {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
+.arrow-bars { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+.arrow-bar-item { display: flex; flex-direction: column; gap: 5px; }
 
 .arrow-bar-label-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
-.arrow-bar-label {
-  font-size: 12px;
-  color: var(--text-main);
-}
-
-.arrow-bar-pct {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-main);
-}
+.arrow-bar-label { font-size: 12px; color: var(--text-main); }
+.arrow-bar-pct   { font-size: 12px; font-weight: 700; color: var(--text-main); }
 
 .arrow-bar-bg {
   height: 8px;
@@ -275,25 +205,13 @@
   transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* 矢ごとの色（全て緑系に統一） */
-.arrow-bar-fill.a1 {
-  background: #2d7a5f;
-}
+/* 矢ごとの色（緑系で統一） */
+.arrow-bar-fill.a1 { background: #2d7a5f; }
+.arrow-bar-fill.a2 { background: #4aad85; }
+.arrow-bar-fill.a3 { background: #2d7a5f; }
+.arrow-bar-fill.a4 { background: #4aad85; }
 
-.arrow-bar-fill.a2 {
-  background: #4aad85;
-}
-
-.arrow-bar-fill.a3 {
-  background: #2d7a5f;
-}
-
-.arrow-bar-fill.a4 {
-  background: #4aad85;
-}
-
-/* バグ修正：gray→green */
-
+/* アドバイスメッセージ */
 .arrow-note {
   display: flex;
   align-items: flex-start;
@@ -306,12 +224,16 @@
   line-height: 1.5;
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   下段（的中傾向 + ミニ統計）
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .bottom-row {
   display: grid;
   grid-template-columns: 1fr 180px 180px;
   gap: 14px;
 }
 
+/* 的中傾向カード */
 .tendency-card {
   background: white;
   border-radius: var(--radius);
@@ -323,18 +245,10 @@
   animation: fadeUp 0.35s 0.2s ease both;
 }
 
-.tendency-visual canvas {
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+.tendency-visual canvas { border-radius: 50%; flex-shrink: 0; }
+.tendency-desc { font-size: 12px; color: var(--text-sub); line-height: 1.65; margin-top: 6px; }
 
-.tendency-desc {
-  font-size: 12px;
-  color: var(--text-sub);
-  line-height: 1.65;
-  margin-top: 6px;
-}
-
+/* ミニ統計カード（平均矢数・練習日数） */
 .mini-stat-card {
   background: white;
   border-radius: var(--radius);
@@ -343,41 +257,36 @@
   animation: fadeUp 0.35s 0.22s ease both;
 }
 
-.mini-stat-label {
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: var(--text-sub);
-  font-weight: 600;
-  margin-bottom: 6px;
-}
+.mini-stat-label { font-size: 10px; letter-spacing: 1px; color: var(--text-sub); font-weight: 600; margin-bottom: 6px; }
+.mini-stat-val   { font-family: 'Bebas Neue', sans-serif; font-size: 34px; line-height: 1; color: var(--text-main); margin-bottom: 6px; }
+.mini-stat-unit  { font-size: 14px; color: var(--text-sub); }
+.mini-stat-sub   { font-size: 10px; color: var(--text-sub); line-height: 1.5; }
 
-.mini-stat-val {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 34px;
-  line-height: 1;
-  color: var(--text-main);
-  margin-bottom: 6px;
-}
-
-.mini-stat-unit {
-  font-size: 14px;
-  color: var(--text-sub);
-}
-
-.mini-stat-sub {
-  font-size: 10px;
-  color: var(--text-sub);
-  line-height: 1.5;
-}
-
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   共通アニメーション
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ════════════════════════════════════════
+   スマホ対応
+   ════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* サマリー：縦並び */
+  .summary-row { grid-template-columns: 1fr; }
+
+  /* グラフ行：縦並び */
+  .chart-row { grid-template-columns: 1fr; }
+
+  /* 下段：縦並び */
+  .bottom-row { grid-template-columns: 1fr; }
+
+  /* グラフの高さを少し低く */
+  .bar-chart { height: 100px; }
+
+  .summary-big { font-size: 32px; }
+  .best-num    { font-size: 36px; }
 }

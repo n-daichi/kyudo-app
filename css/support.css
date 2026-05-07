@@ -1,8 +1,8 @@
-/* ===========================
-   css/support.css - サポート画面のスタイル
-   =========================== */
+/* ============================================================
+   support.css  ―  サポート画面専用スタイル
+   ============================================================ */
 
-/* ── 機能カードのグリッド ── */
+/* 機能紹介カードグリッド */
 .support-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -17,40 +17,27 @@
   animation: fadeUp 0.35s ease both;
 }
 
+/* カードのアイコン */
 .support-card-icon {
   width: 44px;
   height: 44px;
   border-radius: 10px;
   background: var(--green-pale);
+  color: var(--green-dark);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 14px;
-  color: var(--green-dark);
 }
 
-.support-card-title {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
+.support-card-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.support-card-desc  { font-size: 13px; color: var(--text-sub); line-height: 1.65; }
 
-.support-card-desc {
-  font-size: 13px;
-  color: var(--text-sub);
-  line-height: 1.65;
-}
-
-/* ── FAQ アコーディオン ── */
-.faq-section {
-  margin-top: 24px;
-}
-
-.faq-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   FAQ アコーディオン
+━━━━━━━━━━━━━━━━━━━━━━━━ */
+.faq-section { margin-top: 24px; }
+.faq-title   { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
 
 .faq-item {
   background: white;
@@ -60,6 +47,7 @@
   overflow: hidden;
 }
 
+/* 質問行（クリックで開閉） */
 .faq-question {
   padding: 16px 20px;
   font-size: 13px;
@@ -68,20 +56,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  user-select: none;
+  user-select: none; /* テキスト選択を防ぐ */
+  transition: background 0.15s;
 }
+.faq-question:hover { background: var(--gray-1); }
 
-.faq-question:hover {
-  background: var(--gray-1);
-}
-
+/* 開閉アニメーション用矢印 */
 .faq-arrow {
-  transition: transform 0.2s;
   font-size: 12px;
   color: var(--text-sub);
+  transition: transform 0.2s;
 }
 
-/* 回答部分：max-height で開閉アニメーション */
+/* 回答テキスト（max-heightで開閉アニメーション） */
 .faq-answer {
   font-size: 13px;
   color: var(--text-sub);
@@ -92,19 +79,13 @@
   transition: max-height 0.3s ease, padding 0.2s;
 }
 
-.faq-item.open .faq-answer {
-  max-height: 200px;
-  padding: 12px 20px 16px;
-}
+/* open クラスが付いたときに展開 */
+.faq-item.open .faq-answer { max-height: 200px; padding: 12px 20px 16px; }
+.faq-item.open .faq-arrow  { transform: rotate(180deg); }
 
-/* open クラスで展開 */
-.faq-item.open .faq-arrow {
-  transform: rotate(180deg);
-}
-
-/* 矢印を回転 */
-
-/* ── お問い合わせカード ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   お問い合わせバナー
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .contact-card {
   background: var(--navy);
   border-radius: var(--radius);
@@ -118,16 +99,8 @@
   animation: fadeUp 0.35s 0.2s ease both;
 }
 
-.contact-text h3 {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.contact-text p {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
-}
+.contact-text h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.contact-text p  { font-size: 13px; color: rgba(255, 255, 255, 0.7); }
 
 .btn-contact {
   padding: 10px 22px;
@@ -142,169 +115,21 @@
   white-space: nowrap;
   transition: opacity 0.2s;
 }
-
-.btn-contact:hover {
-  opacity: 0.85;
-}
+.btn-contact:hover { opacity: 0.85; }
 
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.support-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
+/* ════════════════════════════════════════
+   スマホ対応
+   ════════════════════════════════════════ */
+@media (max-width: 768px) {
 
-.support-card {
-  background: white;
-  border-radius: var(--radius);
-  padding: 22px 24px;
-  box-shadow: var(--shadow-sm);
-  animation: fadeUp 0.35s ease both;
-}
+  /* 2カラム → 1カラム */
+  .support-grid { grid-template-columns: 1fr; }
 
-.support-card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: var(--green-pale);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 14px;
-  color: var(--green-dark);
-}
-
-.support-card-title {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.support-card-desc {
-  font-size: 13px;
-  color: var(--text-sub);
-  line-height: 1.65;
-}
-
-.faq-section {
-  margin-top: 24px;
-}
-
-.faq-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-
-.faq-item {
-  background: white;
-  border-radius: var(--radius);
-  margin-bottom: 8px;
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-}
-
-.faq-question {
-  padding: 16px 20px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  user-select: none;
-}
-
-.faq-question:hover {
-  background: var(--gray-1);
-}
-
-.faq-arrow {
-  transition: transform 0.2s;
-  font-size: 12px;
-  color: var(--text-sub);
-}
-
-.faq-answer {
-  font-size: 13px;
-  color: var(--text-sub);
-  line-height: 1.7;
-  padding: 0 20px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.2s;
-}
-
-.faq-item.open .faq-answer {
-  max-height: 200px;
-  padding: 12px 20px 16px;
-}
-
-.faq-item.open .faq-arrow {
-  transform: rotate(180deg);
-}
-
-.contact-card {
-  background: var(--navy);
-  border-radius: var(--radius);
-  padding: 28px;
-  color: white;
-  margin-top: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  animation: fadeUp 0.35s 0.2s ease both;
-}
-
-.contact-text h3 {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.contact-text p {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.btn-contact {
-  padding: 10px 22px;
-  background: var(--green-light);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: 'Noto Sans JP', sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: opacity 0.2s;
-}
-
-.btn-contact:hover {
-  opacity: 0.85;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  /* お問い合わせバナーを縦並び */
+  .contact-card { flex-direction: column; text-align: center; }
 }

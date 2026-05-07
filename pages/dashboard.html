@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KYUDO DOJO - 道場</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap"
-    rel="stylesheet" />
-  <!-- 共通CSS → ページ固有CSS の順で読み込む -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <!-- pages/ から見た css/ の相対パス -->
   <link rel="stylesheet" href="../css/common.css" />
   <link rel="stylesheet" href="../css/dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
 
-  <!-- ===== サイドバー ===== -->
   <aside class="sidebar">
-    <!-- クリックでプロフィールへ -->
     <a href="profile.html" class="sidebar-user">
       <div class="user-avatar" id="sidebar-avatar">弓</div>
       <div class="user-info">
@@ -26,84 +21,56 @@
         <p class="user-rank" id="sidebar-rank">Rank: 初段</p>
       </div>
     </a>
-
     <nav class="sidebar-nav">
       <a href="dashboard.html" class="nav-item active">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="7" height="7" />
-          <rect x="14" y="3" width="7" height="7" />
-          <rect x="14" y="14" width="7" height="7" />
-          <rect x="3" y="14" width="7" height="7" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dojo
       </a>
       <a href="stats.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="20" x2="18" y2="10" />
-          <line x1="12" y1="20" x2="12" y2="4" />
-          <line x1="6" y1="20" x2="6" y2="14" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         Stats
       </a>
       <a href="mato.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <circle cx="12" cy="12" r="4" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
         Mato
       </a>
       <a href="profile.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Profile
       </a>
     </nav>
-
     <div class="sidebar-bottom">
       <a href="support.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-          <line x1="12" y1="17" x2="12.01" y2="17" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Support
       </a>
-      <!-- handleSignOut は utils.js で定義 -->
-      <a href="../login.html" class="nav-item signout" onclick="handleSignOut(event)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          <polyline points="16 17 21 12 16 7" />
-          <line x1="21" y1="12" x2="9" y2="12" />
-        </svg>
+      <a href="../index.html" class="nav-item signout" onclick="handleSignOut(event)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sign Out
       </a>
     </div>
   </aside>
 
-  <!-- ===== メインコンテンツ ===== -->
   <main class="main-content">
-
-    <!-- ページヘッダー -->
     <header class="page-header">
       <h1 class="page-title">KYUDO DOJO</h1>
       <div class="header-actions">
-        <!-- アバタークリックでプロフィールへ -->
+        <button class="icon-btn" title="履歴">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </button>
+        <button class="icon-btn" title="設定">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20 12h-2M6 12H4M19.07 19.07l-1.41-1.41M5.34 5.34L3.93 3.93M12 20v-2M12 6V4"/></svg>
+        </button>
         <a href="profile.html" class="avatar-btn" id="header-avatar">弓</a>
       </div>
     </header>
 
-    <!-- 今日のサマリー -->
     <section class="today-summary">
-      <!-- 左：的中率 + セッション表示 -->
       <div class="accuracy-card">
         <p class="card-label">TODAY'S ACCURACY</p>
-        <!-- id="today-pct" は dashboard.js で数値を書き込む -->
         <p class="accuracy-big"><span id="today-pct">0</span><span class="pct"> %</span></p>
         <div class="session-row" id="session-row"></div>
       </div>
-      <!-- 右：射形ステータス -->
       <div class="form-card">
         <div class="form-target">
           <div class="form-ring r1"></div>
@@ -116,48 +83,53 @@
       </div>
     </section>
 
-    <!-- 的中記録セクション -->
     <section class="record-section">
       <div class="section-header">
         <div>
           <h2 class="section-title">的中記録</h2>
           <p class="section-sub" id="record-sub">読み込み中...</p>
         </div>
-        <!-- saveRecord() は dashboard.js で定義 -->
         <button class="btn-save" onclick="saveRecord()">保存</button>
       </div>
-
-      <!-- 矢ボタン（1〜4本目）は dashboard.js が動的に生成 -->
       <div class="arrow-grid" id="arrow-grid"></div>
-
       <div class="legend">
-        <div class="legend-item">
-          <div class="legend-circle hit">○</div>
-          <span>的中（○）</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-circle miss">×</div>
-          <span>失中（×）</span>
-        </div>
+        <div class="legend-item"><div class="legend-circle hit">○</div><span>的中（○）</span></div>
+        <div class="legend-item"><div class="legend-circle miss">×</div><span>失中（×）</span></div>
       </div>
     </section>
 
-    <!-- 練習ログセクション -->
     <section class="log-section">
       <div class="section-header">
         <h2 class="section-title">練習ログ</h2>
         <a href="stats.html" class="link-all">すべて見る</a>
       </div>
-      <!-- ログ一覧は dashboard.js が動的に生成 -->
       <div class="log-list" id="log-list"></div>
     </section>
-
   </main>
 
-  <!-- JS の読み込み順：supabase.js → utils.js → dashboard.js -->
+  <!-- JS読み込み順：supabase → utils → dashboard -->
   <script src="../js/supabase.js"></script>
   <script src="../js/utils.js"></script>
   <script src="../js/dashboard.js"></script>
-</body>
 
+  <!-- ボトムナビ（スマホ専用） -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dojo
+    </a>
+    <a href="stats.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Stats
+    </a>
+    <a href="mato.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+      Mato
+    </a>
+    <a href="profile.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </a>
+  </nav>
+</body>
 </html>

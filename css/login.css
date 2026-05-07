@@ -1,27 +1,28 @@
-/* ===========================
-   KYUDO DOJO - ログイン画面
-   =========================== */
+/* ============================================================
+   login.css  ―  ログイン画面専用スタイル
+   ============================================================ */
 
+/* ── CSS変数（色・シャドウ） ── */
 :root {
-  --green-dark: #1a4a3a;
-  --green-mid: #2d7a5f;
+  --green-dark : #1a4a3a;
+  --green-mid  : #2d7a5f;
   --green-light: #4aad85;
-  --green-pale: #a8d5c2;
-  --accent: #1e3a4a;
-  --navy: #1a2e3b;
-  --white: #ffffff;
-  --gray-light: #f5f5f5;
-  --gray-mid: #e0e0e0;
-  --gray-text: #666;
-  --shadow: 0 8px 40px rgba(0,0,0,0.18);
+  --navy       : #1a2e3b;
+  --white      : #ffffff;
+  --gray-light : #f5f5f5;
+  --gray-mid   : #e0e0e0;
+  --gray-text  : #666666;
+  --shadow     : 0 8px 40px rgba(0, 0, 0, 0.18);
 }
 
-* {
+/* ── リセット ── */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
+/* ── ページ全体 ── */
 body {
   font-family: 'Noto Sans JP', sans-serif;
   min-height: 100vh;
@@ -32,33 +33,39 @@ body {
   background: var(--green-dark);
 }
 
-/* ── 背景 ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   背景エリア
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .bg-wrapper {
   position: fixed;
   inset: 0;
   z-index: 0;
 }
 
+/* グラデーションオーバーレイ */
 .bg-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(26, 74, 58, 0.85) 0%,
-    rgba(45, 122, 95, 0.7) 40%,
-    rgba(74, 173, 133, 0.6) 100%
+    rgba(26, 74, 58, 0.85)  0%,
+    rgba(45, 122, 95, 0.70) 40%,
+    rgba(74, 173, 133, 0.60) 100%
   );
 }
 
+/* 放射状グラデーション（シルエット風） */
 .bg-silhouette {
   position: absolute;
   inset: 0;
   background:
     radial-gradient(ellipse at 80% 50%, rgba(74, 173, 133, 0.25) 0%, transparent 60%),
-    radial-gradient(ellipse at 20% 80%, rgba(26, 46, 59, 0.4) 0%, transparent 50%);
+    radial-gradient(ellipse at 20% 80%, rgba(26, 46,  59, 0.40)  0%, transparent 50%);
 }
 
-/* ── 中央レイアウト ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   中央レイアウト
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .page-center {
   position: relative;
   z-index: 1;
@@ -70,7 +77,9 @@ body {
   padding: 24px;
 }
 
-/* ── カード ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   ログインカード
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .login-card {
   background: var(--white);
   border-radius: 16px;
@@ -81,6 +90,7 @@ body {
   animation: cardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* カードのフェードイン */
 @keyframes cardIn {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -90,8 +100,8 @@ body {
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
   justify-content: center;
+  gap: 10px;
   margin-bottom: 6px;
 }
 
@@ -116,8 +126,8 @@ body {
   text-align: center;
   font-size: 11px;
   color: var(--gray-text);
-  margin-bottom: 28px;
   letter-spacing: 0.5px;
+  margin-bottom: 28px;
 }
 
 /* ── フォームタイトル ── */
@@ -128,7 +138,7 @@ body {
   margin-bottom: 22px;
 }
 
-/* ── フィールド ── */
+/* ── 入力フィールド ── */
 .field-group {
   margin-bottom: 16px;
 }
@@ -141,23 +151,25 @@ body {
   margin-bottom: 6px;
 }
 
+/* 入力欄とアイコンを重ねるためのラッパー */
 .input-wrapper {
   position: relative;
 }
 
 .input-wrapper input {
   width: 100%;
-  padding: 11px 40px 11px 14px;
+  padding: 11px 40px 11px 14px; /* 右側にアイコン分の余白 */
   border: 1.5px solid var(--gray-mid);
   border-radius: 8px;
   font-size: 14px;
   font-family: 'Noto Sans JP', sans-serif;
   color: #333;
   background: var(--gray-light);
-  transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+/* フォーカス時の強調 */
 .input-wrapper input:focus {
   border-color: var(--green-mid);
   box-shadow: 0 0 0 3px rgba(45, 122, 95, 0.12);
@@ -168,6 +180,7 @@ body {
   color: #bbb;
 }
 
+/* 入力欄の右側アイコン */
 .input-icon {
   position: absolute;
   right: 13px;
@@ -177,12 +190,14 @@ body {
   font-size: 13px;
   display: flex;
   align-items: center;
+  pointer-events: none; /* アイコンをクリック不可にして入力欄を邪魔しない */
 }
 
 /* ── ログインボタン ── */
 .btn-login {
   width: 100%;
   padding: 13px;
+  margin-top: 8px;
   background: var(--navy);
   color: white;
   border: none;
@@ -190,30 +205,21 @@ body {
   font-size: 15px;
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 500;
+  letter-spacing: 1px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 8px;
   transition: background 0.2s, transform 0.1s;
-  letter-spacing: 1px;
 }
 
-.btn-login:hover {
-  background: #0f2030;
-  transform: translateY(-1px);
-}
+.btn-login:hover  { background: #0f2030; transform: translateY(-1px); }
+.btn-login:active { transform: translateY(0); }
 
-.btn-login:active {
-  transform: translateY(0);
-}
+.btn-arrow { font-size: 16px; }
 
-.btn-arrow {
-  font-size: 16px;
-}
-
-/* ── パスワード忘れ ── */
+/* ── パスワード忘れリンク ── */
 .forgot-link {
   display: block;
   text-align: center;
@@ -224,34 +230,32 @@ body {
   transition: color 0.2s;
 }
 
-.forgot-link:hover {
-  color: var(--green-mid);
-}
+.forgot-link:hover { color: var(--green-mid); }
 
-/* ── 新規登録 ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   新規登録エリア
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .register-row {
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: 13px;
-  color: rgba(255,255,255,0.75);
+  color: rgba(255, 255, 255, 0.75);
   animation: cardIn 0.5s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .btn-register {
   padding: 7px 16px;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
   color: white;
-  border: 1px solid rgba(255,255,255,0.35);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 8px;
   font-size: 13px;
   font-family: 'Noto Sans JP', sans-serif;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.2s;
   white-space: nowrap;
+  transition: background 0.2s;
 }
 
-.btn-register:hover {
-  background: rgba(255,255,255,0.25);
-}
+.btn-register:hover { background: rgba(255, 255, 255, 0.25); }

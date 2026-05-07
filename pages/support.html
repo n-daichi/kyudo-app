@@ -1,75 +1,50 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KYUDO DOJO - サポート</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/common.css" />
   <link rel="stylesheet" href="../css/support.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
+
   <aside class="sidebar">
     <a href="profile.html" class="sidebar-user">
       <div class="user-avatar" id="sidebar-avatar">弓</div>
       <div class="user-info">
         <p class="user-name" id="sidebar-name">読み込み中...</p>
-        <p class="user-rank" id="sidebar-rank">Rank: Shodan</p>
+        <p class="user-rank" id="sidebar-rank">Rank: 初段</p>
       </div>
     </a>
     <nav class="sidebar-nav">
       <a href="dashboard.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="7" height="7" />
-          <rect x="14" y="3" width="7" height="7" />
-          <rect x="14" y="14" width="7" height="7" />
-          <rect x="3" y="14" width="7" height="7" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dojo
       </a>
       <a href="stats.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="20" x2="18" y2="10" />
-          <line x1="12" y1="20" x2="12" y2="4" />
-          <line x1="6" y1="20" x2="6" y2="14" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         Stats
       </a>
       <a href="mato.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <circle cx="12" cy="12" r="4" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
         Mato
       </a>
       <a href="profile.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Profile
       </a>
     </nav>
     <div class="sidebar-bottom">
       <a href="support.html" class="nav-item active">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-          <line x1="12" y1="17" x2="12.01" y2="17" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Support
       </a>
-      <a href="../login.html" class="nav-item signout" onclick="handleSignOut(event)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          <polyline points="16 17 21 12 16 7" />
-          <line x1="21" y1="12" x2="9" y2="12" />
-        </svg>
+      <a href="../index.html" class="nav-item signout" onclick="handleSignOut(event)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sign Out
       </a>
     </div>
@@ -77,84 +52,66 @@
 
   <main class="main-content">
     <header class="page-header">
-      <h1 class="page-title"
-        style="font-family:'Noto Sans JP',sans-serif;font-size:20px;font-weight:700;letter-spacing:0;">サポート</h1>
+      <h1 style="font-family:'Noto Sans JP',sans-serif;font-size:20px;font-weight:700;">サポート</h1>
       <div class="header-actions">
         <a href="profile.html" class="avatar-btn" id="header-avatar">弓</a>
       </div>
     </header>
 
-    <!-- 機能カード -->
+    <!-- 機能紹介カード -->
     <div class="support-grid">
       <div class="support-card">
         <div class="support-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7" />
-            <rect x="14" y="3" width="7" height="7" />
-            <rect x="14" y="14" width="7" height="7" />
-            <rect x="3" y="14" width="7" height="7" />
-          </svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         </div>
         <p class="support-card-title">道場（Dojo）</p>
         <p class="support-card-desc">今日の的中を1本ずつ記録します。○ボタンで的中、×ボタンで失中を入力し、「保存」で立ちごとにデータが保存されます。</p>
       </div>
       <div class="support-card" style="animation-delay:0.05s;">
         <div class="support-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10" />
-            <circle cx="12" cy="12" r="4" />
-          </svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
         </div>
         <p class="support-card-title">的（Mato）</p>
         <p class="support-card-desc">的のイラストをクリックして着弾位置を記録します。的の外側の灰色エリアも「外れ」の位置として記録できます。</p>
       </div>
       <div class="support-card" style="animation-delay:0.1s;">
         <div class="support-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="20" x2="18" y2="10" />
-            <line x1="12" y1="20" x2="12" y2="4" />
-            <line x1="6" y1="20" x2="6" y2="14" />
-          </svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         </div>
         <p class="support-card-title">統計（Stats）</p>
         <p class="support-card-desc">過去の的中率推移をグラフで確認できます。矢別の分析では日付を選んで特定日のデータを表示できます。</p>
       </div>
       <div class="support-card" style="animation-delay:0.15s;">
         <div class="support-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </div>
         <p class="support-card-title">プロフィール</p>
         <p class="support-card-desc">段位や道場名、弓の強さを設定できます。設定した情報は端末に保存されます。</p>
       </div>
     </div>
 
-    <!-- FAQ -->
+    <!-- FAQ（クリックで開閉するアコーディオン） -->
     <div class="faq-section">
       <p class="faq-title">よくある質問</p>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">道場とMatoの記録は連動していますか？<span class="faq-arrow">▼</span></div>
-        <div class="faq-answer">
-          はい。どちらも同じデータベースに保存されます。Matoで着弾位置を記録すると、Statsの的中傾向分析に反映されます。道場画面では位置なし、Mato画面では位置ありで保存されます。</div>
+        <div class="faq-answer">はい。どちらも同じデータベースに保存されます。Matoで着弾位置を記録すると、Statsの的中傾向分析に反映されます。</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">他の道場メンバーのデータは見えますか？<span class="faq-arrow">▼</span></div>
-        <div class="faq-answer">いいえ。ログインしたアカウントのデータのみ表示されます。他のメンバーのデータは表示・閲覧できません。</div>
+        <div class="faq-answer">いいえ。ログインしたアカウントのデータのみ表示されます。他のメンバーのデータは閲覧できません。</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">誤って保存したデータを削除できますか？<span class="faq-arrow">▼</span></div>
-        <div class="faq-answer">現在のバージョンでは、誤ったデータの削除機能はありません。Supabaseの管理画面（Table
-          Editor）から直接削除することができます。将来のバージョンでアプリ内から削除できる機能を追加予定です。</div>
+        <div class="faq-answer">現在のバージョンではアプリ内から削除できません。Supabaseの管理画面（Table Editor）から直接削除してください。将来のバージョンで対応予定です。</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">スマートフォンでも使えますか？<span class="faq-arrow">▼</span></div>
-        <div class="faq-answer">ブラウザからアクセスすれば使えます。ただし現在のレイアウトはPC向けに最適化されています。スマートフォン対応は今後のアップデートで対応予定です。</div>
+        <div class="faq-answer">ブラウザからアクセスすれば使えますが、現在のレイアウトはPC向けに最適化されています。スマートフォン対応は今後のアップデートで対応予定です。</div>
       </div>
 
       <div class="faq-item" onclick="toggleFaq(this)">
@@ -163,7 +120,7 @@
       </div>
     </div>
 
-    <!-- お問い合わせ -->
+    <!-- お問い合わせバナー -->
     <div class="contact-card">
       <div class="contact-text">
         <h3>お問い合わせ・不具合報告</h3>
@@ -174,33 +131,38 @@
   </main>
 
   <script src="../js/supabase.js"></script>
+  <script src="../js/utils.js"></script>
   <script>
+    // FAQ のアコーディオン開閉
+    function toggleFaq(el) { el.classList.toggle('open'); }
+
     async function init() {
-      const user = await getCurrentUser();
-      if (!user) { window.location.href = 'login.html'; return; }
-      const saved = JSON.parse(localStorage.getItem('kyudo-profile') || '{}');
-      const displayName = saved.name || user.email || 'Kyudojin';
-      const initial = displayName[0].toUpperCase();
-      document.getElementById('sidebar-avatar').textContent = initial;
-      document.getElementById('header-avatar').textContent = initial;
-      document.getElementById('sidebar-name').textContent = displayName;
-      const rankMap = { mudan: '無段', shodan: '初段', nidan: '二段', sandan: '三段', yondan: '四段', godan: '五段', rokudan: '六段' };
-      document.getElementById('sidebar-rank').textContent = `Rank: ${rankMap[saved.rank] || '初段'}`;
-    }
-
-    function toggleFaq(el) {
-      el.classList.toggle('open');
-    }
-
-    async function handleSignOut(e) {
-      e.preventDefault();
-      await signOut();
+      const user = await requireLogin(); // utils.js
+      if (!user) return;
+      initSidebar(user); // utils.js
     }
 
     init();
   </script>
-  <script src="../js/utils.js"></script>
-  <script src="../js/support.js"></script>
-</body>
 
+  <!-- ボトムナビ（スマホ専用） -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dojo
+    </a>
+    <a href="stats.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Stats
+    </a>
+    <a href="mato.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+      Mato
+    </a>
+    <a href="profile.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </a>
+  </nav>
+</body>
 </html>

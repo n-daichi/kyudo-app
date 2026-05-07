@@ -1,75 +1,50 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KYUDO DOJO - プロフィール</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/common.css" />
   <link rel="stylesheet" href="../css/profile.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
+
   <aside class="sidebar">
     <a href="profile.html" class="sidebar-user">
       <div class="user-avatar" id="sidebar-avatar">弓</div>
       <div class="user-info">
         <p class="user-name" id="sidebar-name">読み込み中...</p>
-        <p class="user-rank" id="sidebar-rank">Rank: Shodan</p>
+        <p class="user-rank" id="sidebar-rank">Rank: 初段</p>
       </div>
     </a>
     <nav class="sidebar-nav">
       <a href="dashboard.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="7" height="7" />
-          <rect x="14" y="3" width="7" height="7" />
-          <rect x="14" y="14" width="7" height="7" />
-          <rect x="3" y="14" width="7" height="7" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dojo
       </a>
       <a href="stats.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="20" x2="18" y2="10" />
-          <line x1="12" y1="20" x2="12" y2="4" />
-          <line x1="6" y1="20" x2="6" y2="14" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         Stats
       </a>
       <a href="mato.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <circle cx="12" cy="12" r="4" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
         Mato
       </a>
       <a href="profile.html" class="nav-item active">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Profile
       </a>
     </nav>
     <div class="sidebar-bottom">
       <a href="support.html" class="nav-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-          <line x1="12" y1="17" x2="12.01" y2="17" />
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Support
       </a>
-      <a href="../login.html" class="nav-item signout" onclick="handleSignOut(event)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          <polyline points="16 17 21 12 16 7" />
-          <line x1="21" y1="12" x2="9" y2="12" />
-        </svg>
+      <a href="../index.html" class="nav-item signout" onclick="handleSignOut(event)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sign Out
       </a>
     </div>
@@ -77,32 +52,32 @@
 
   <main class="main-content">
     <header class="page-header">
-      <h1 class="page-title"
-        style="font-family:'Noto Sans JP',sans-serif;font-size:20px;font-weight:700;letter-spacing:0;">プロフィール</h1>
+      <h1 style="font-family:'Noto Sans JP',sans-serif;font-size:20px;font-weight:700;">プロフィール</h1>
       <div class="header-actions">
         <a href="profile.html" class="avatar-btn" id="header-avatar">弓</a>
       </div>
     </header>
 
     <div class="profile-grid">
+
       <!-- 左：プロフィールカード -->
       <div class="profile-card">
         <div class="profile-avatar-big" id="profile-avatar-big">弓</div>
         <p style="font-size:15px;font-weight:700;margin-bottom:4px;" id="profile-display-name">Kyudojin</p>
         <p class="profile-email" id="profile-email">読み込み中...</p>
-        <span class="profile-rank-badge" id="profile-rank-badge">Rank: Shodan</span>
+        <span class="profile-rank-badge" id="profile-rank-badge">Rank: 初段</span>
         <hr class="profile-divider" />
         <div class="profile-stat-row">
           <div class="profile-stat">
-            <p class="profile-stat-val" id="stat-total-shots">-</p>
+            <p class="profile-stat-val"  id="stat-total-shots">-</p>
             <p class="profile-stat-label">総射数</p>
           </div>
           <div class="profile-stat">
-            <p class="profile-stat-val" id="stat-avg-pct">-</p>
+            <p class="profile-stat-val"  id="stat-avg-pct">-</p>
             <p class="profile-stat-label">平均的中率</p>
           </div>
           <div class="profile-stat">
-            <p class="profile-stat-val" id="stat-days">-</p>
+            <p class="profile-stat-val"  id="stat-days">-</p>
             <p class="profile-stat-label">練習日数</p>
           </div>
         </div>
@@ -112,23 +87,17 @@
       <div class="profile-right">
         <div class="settings-card">
           <p class="settings-title">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             基本情報
           </p>
+
           <div class="settings-row">
-            <div>
-              <p class="settings-label">表示名</p>
-              <p class="settings-sub">道場内での名前</p>
-            </div>
+            <div><p class="settings-label">表示名</p><p class="settings-sub">道場内での名前</p></div>
             <input type="text" class="settings-input" id="input-name" placeholder="例：弓道太郎" />
           </div>
+
           <div class="settings-row">
-            <div>
-              <p class="settings-label">段位</p>
-            </div>
+            <div><p class="settings-label">段位</p></div>
             <select class="settings-select" id="input-rank">
               <option value="mudan">無段</option>
               <option value="shodan" selected>初段</option>
@@ -139,16 +108,14 @@
               <option value="rokudan">六段</option>
             </select>
           </div>
+
           <div class="settings-row">
-            <div>
-              <p class="settings-label">道場名</p>
-            </div>
+            <div><p class="settings-label">道場名</p></div>
             <input type="text" class="settings-input" id="input-dojo" placeholder="例：〇〇弓道場" />
           </div>
+
           <div class="settings-row">
-            <div>
-              <p class="settings-label">弓の強さ</p>
-            </div>
+            <div><p class="settings-label">弓の強さ</p></div>
             <select class="settings-select" id="input-bow">
               <option value="10">10kg</option>
               <option value="12">12kg</option>
@@ -158,6 +125,7 @@
               <option value="20">20kg</option>
             </select>
           </div>
+
           <button class="btn-save-settings" onclick="saveSettings()">設定を保存</button>
         </div>
 
@@ -176,75 +144,99 @@
   </main>
 
   <script src="../js/supabase.js"></script>
+  <script src="../js/utils.js"></script>
   <script>
+    // ── プロフィール画面固有の処理 ──
+
     async function init() {
-      const user = await getCurrentUser();
-      if (!user) { window.location.href = "../login.html";; return; }
+      const user = await requireLogin(); // utils.js
+      if (!user) return;
 
       // ローカルストレージから設定を読み込む
-      const saved = JSON.parse(localStorage.getItem('kyudo-profile') || '{}');
+      const saved       = JSON.parse(localStorage.getItem('kyudo-profile') || '{}');
       const displayName = saved.name || user.email || 'Kyudojin';
-      const initial = displayName[0].toUpperCase();
+      const initial     = displayName[0].toUpperCase();
+
+      const RANK_MAP = { mudan:'無段', shodan:'初段', nidan:'二段', sandan:'三段', yondan:'四段', godan:'五段', rokudan:'六段' };
+      const rankLabel = RANK_MAP[saved.rank] || '初段';
+
+      // 各要素に値をセット
       ['sidebar-avatar', 'header-avatar', 'profile-avatar-big'].forEach(id => {
         document.getElementById(id).textContent = initial;
       });
-      document.getElementById('sidebar-name').textContent = displayName;
-      document.getElementById('profile-email').textContent = user.email || '';
+      document.getElementById('sidebar-name').textContent        = displayName;
+      document.getElementById('sidebar-rank').textContent        = `Rank: ${rankLabel}`;
+      document.getElementById('profile-email').textContent       = user.email || '';
       document.getElementById('profile-display-name').textContent = saved.name || 'Kyudojin';
+      document.getElementById('profile-rank-badge').textContent  = `Rank: ${rankLabel}`;
 
-      const rankMap = { mudan: '無段', shodan: '初段', nidan: '二段', sandan: '三段', yondan: '四段', godan: '五段', rokudan: '六段' };
-      const rankLabel = rankMap[saved.rank] || '初段';
-      document.getElementById('sidebar-rank').textContent = `Rank: ${rankLabel}`;
-      document.getElementById('profile-rank-badge').textContent = `Rank: ${rankLabel}`;
-
+      // フォームに保存値を反映
       if (saved.name) document.getElementById('input-name').value = saved.name;
       if (saved.rank) document.getElementById('input-rank').value = saved.rank;
       if (saved.dojo) document.getElementById('input-dojo').value = saved.dojo;
-      if (saved.bow) document.getElementById('input-bow').value = saved.bow;
+      if (saved.bow)  document.getElementById('input-bow').value  = saved.bow;
 
-      // 統計を取得
+      // 統計を取得して表示
       try {
-        const shots = await getRecentShots(365);
-        const hits = shots.filter(s => s.result).length;
-        const days = new Set(shots.map(s => s.shot_date)).size;
-        const pct = shots.length > 0 ? Math.round(hits / shots.length * 100) : 0;
+        const shots = await getRecentShots(365); // supabase.js
+        const hits  = shots.filter(s => s.result).length;
+        const days  = new Set(shots.map(s => s.shot_date)).size;
+        const pct   = shots.length > 0 ? Math.round(hits / shots.length * 100) : 0;
 
         document.getElementById('stat-total-shots').textContent = shots.length || '-';
-        document.getElementById('stat-avg-pct').textContent = shots.length > 0 ? pct + '%' : '-';
-        document.getElementById('stat-days').textContent = days || '-';
+        document.getElementById('stat-avg-pct').textContent     = shots.length > 0 ? pct + '%' : '-';
+        document.getElementById('stat-days').textContent        = days || '-';
       } catch (e) { console.error(e); }
     }
 
+    /** 設定をローカルストレージに保存して画面に反映 */
     function saveSettings() {
       const profile = {
         name: document.getElementById('input-name').value,
         rank: document.getElementById('input-rank').value,
         dojo: document.getElementById('input-dojo').value,
-        bow: document.getElementById('input-bow').value,
+        bow:  document.getElementById('input-bow').value,
       };
       localStorage.setItem('kyudo-profile', JSON.stringify(profile));
-      const rankMap = { mudan: '無段', shodan: '初段', nidan: '二段', sandan: '三段', yondan: '四段', godan: '五段', rokudan: '六段' };
-      const rankLabel = rankMap[profile.rank] || '初段';
+
+      const RANK_MAP    = { mudan:'無段', shodan:'初段', nidan:'二段', sandan:'三段', yondan:'四段', godan:'五段', rokudan:'六段' };
+      const rankLabel   = RANK_MAP[profile.rank] || '初段';
       const displayName = profile.name || 'Kyudojin';
-      const initial = displayName[0].toUpperCase();
-      document.getElementById('profile-display-name').textContent = displayName;
-      document.getElementById('sidebar-name').textContent = displayName;
-      document.getElementById('sidebar-rank').textContent = `Rank: ${rankLabel}`;
-      document.getElementById('profile-rank-badge').textContent = `Rank: ${rankLabel}`;
-      ['sidebar-avatar', 'header-avatar', 'profile-avatar-big'].forEach(id => {
+      const initial     = displayName[0].toUpperCase();
+
+      // 画面をリアルタイムで更新
+      ['sidebar-avatar','header-avatar','profile-avatar-big'].forEach(id => {
         document.getElementById(id).textContent = initial;
       });
-      alert('設定を保存しました！');
-    }
+      document.getElementById('profile-display-name').textContent = displayName;
+      document.getElementById('sidebar-name').textContent         = displayName;
+      document.getElementById('sidebar-rank').textContent         = `Rank: ${rankLabel}`;
+      document.getElementById('profile-rank-badge').textContent   = `Rank: ${rankLabel}`;
 
-    async function handleSignOut(e) {
-      e.preventDefault();
-      await signOut();
+      alert('設定を保存しました！');
     }
 
     init();
   </script>
-  <script src="../js/profile.js"></script>
-</body>
 
+  <!-- ボトムナビ（スマホ専用） -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dojo
+    </a>
+    <a href="stats.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Stats
+    </a>
+    <a href="mato.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+      Mato
+    </a>
+    <a href="profile.html" class="bottom-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </a>
+  </nav>
+</body>
 </html>

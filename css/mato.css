@@ -1,7 +1,8 @@
-/* ===========================
-   KYUDO DOJO - 的の位置記録
-   =========================== */
+/* ============================================================
+   mato.css  ―  的の位置記録画面専用スタイル
+   ============================================================ */
 
+/* ── サブタイトル（斜体のキャッチコピー） ── */
 .page-sub {
   font-size: 12px;
   color: var(--text-sub);
@@ -9,6 +10,9 @@
   font-style: italic;
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   2カラムレイアウト（左：的エリア / 右：分析パネル）
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .mato-layout {
   display: grid;
   grid-template-columns: 1fr 260px;
@@ -22,6 +26,9 @@
   gap: 16px;
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   セッション情報（立ち・矢番号・甲乙タブ）
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .session-info {
   background: white;
   border-radius: var(--radius);
@@ -41,14 +48,12 @@
 .session-name {
   font-size: 18px;
   font-weight: 700;
-  margin: 4px 0 14px;
   color: var(--text-main);
+  margin: 4px 0 14px;
 }
 
-.arrow-tabs {
-  display: flex;
-  gap: 8px;
-}
+/* 甲矢・乙矢切替タブ */
+.arrow-tabs { display: flex; gap: 8px; }
 
 .tab {
   padding: 7px 18px;
@@ -61,19 +66,12 @@
   cursor: pointer;
   transition: all 0.15s;
 }
+.tab:hover  { border-color: var(--green-mid); color: var(--green-mid); }
+.tab.active { background: var(--navy); border-color: var(--navy); color: white; font-weight: 600; }
 
-.tab:hover {
-  border-color: var(--green-mid);
-  color: var(--green-mid);
-}
-
-.tab.active {
-  background: var(--navy);
-  border-color: var(--navy);
-  color: white;
-  font-weight: 600;
-}
-
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   的エリア（Canvasラッパー）
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .mato-wrap {
   background: white;
   border-radius: var(--radius);
@@ -86,7 +84,10 @@
   animation: fadeUp 0.3s 0.05s ease both;
 }
 
-/* 的の外側（的中外れの記録用）もクリックできるエリア */
+/*
+  クリックエリア：的の外（失中位置）もクリックできるよう
+  canvas より一回り大きいグレーの四角を用意する
+*/
 .mato-click-area {
   position: relative;
   width: 320px;
@@ -95,37 +96,29 @@
   align-items: center;
   justify-content: center;
   cursor: crosshair;
-  background: #f0f2f1;
+  background: #f0f2f1;       /* 的の外エリアの色 */
   border-radius: 14px;
-  border: 2px dashed #c0cbc5;
+  border: 2px dashed #c0cbc5; /* 「クリックできる」ことを示す点線枠 */
   overflow: hidden;
 }
 
+/* Canvas本体（pointer-eventsをnoneにしてクリックをラッパーに委ねる） */
 #mato-canvas {
   border-radius: 12px;
   display: block;
-}
-
-/* クリック位置プレビューマーカー */
-.click-preview {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: rgba(240, 165, 0, 0.8);
-  border: 2px solid white;
-  box-shadow: 0 0 8px rgba(240, 165, 0, 0.5);
-  transform: translate(-50%, -50%);
   pointer-events: none;
-  display: none;
 }
 
+/* クリック位置のヒントテキスト */
 .mato-hint {
   font-size: 11px;
   color: var(--text-sub);
   text-align: center;
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   的中・失中ボタン
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .result-btns {
   display: flex;
   gap: 12px;
@@ -150,22 +143,18 @@
 }
 
 .btn-atari:hover,
-.btn-hazure:hover {
-  opacity: 0.88;
-  transform: translateY(-1px);
-}
+.btn-hazure:hover  { opacity: 0.88; transform: translateY(-1px); }
 
-.btn-atari {
-  background: var(--green-mid);
-  color: white;
-}
-
+.btn-atari  { background: var(--green-mid); color: white; }
 .btn-hazure {
   background: var(--gray-1);
   color: var(--text-sub);
   border: 1.5px solid var(--gray-2);
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   射の履歴チップ（直近4射表示）
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .shot-history {
   background: white;
   border-radius: var(--radius);
@@ -174,8 +163,8 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  animation: fadeUp 0.3s 0.15s ease both;
   min-height: 60px;
+  animation: fadeUp 0.3s 0.15s ease both;
 }
 
 .shot-chip {
@@ -191,50 +180,27 @@
   min-width: 60px;
 }
 
-.shot-chip.current {
-  border-color: var(--navy);
-  background: white;
-}
+/* 現在の射（次に打つ矢）は強調表示 */
+.shot-chip.current { border-color: var(--navy); background: white; }
+.shot-chip.current .chip-shot-label { color: var(--navy); font-weight: 700; }
 
-.shot-chip.current .chip-shot-label {
-  color: var(--navy);
-  font-weight: 700;
-}
+.chip-shot-label  { font-size: 10px; color: var(--text-sub); font-weight: 600; }
+.chip-shot-result { font-size: 13px; font-weight: 700; }
+.chip-shot-result.hit     { color: var(--green-mid); }
+.chip-shot-result.miss    { color: var(--gray-3); }
+.chip-shot-result.pending { color: var(--text-sub); }
+.chip-shot-sub { font-size: 10px; color: var(--text-sub); }
 
-.chip-shot-label {
-  font-size: 10px;
-  color: var(--text-sub);
-  font-weight: 600;
-}
-
-.chip-shot-result {
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.chip-shot-result.hit {
-  color: var(--green-mid);
-}
-
-.chip-shot-result.miss {
-  color: var(--gray-3);
-}
-
-.chip-shot-result.pending {
-  color: var(--text-sub);
-}
-
-.chip-shot-sub {
-  font-size: 10px;
-  color: var(--text-sub);
-}
-
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   右側パネル群
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .mato-right {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
+/* パネル共通 */
 .panel {
   background: white;
   border-radius: var(--radius);
@@ -253,35 +219,19 @@
   margin-bottom: 14px;
 }
 
-.heatmap-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.heatmap-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+/* ── ヒートマップ ── */
+.heatmap-list { display: flex; flex-direction: column; gap: 10px; }
+.heatmap-item { display: flex; flex-direction: column; gap: 4px; }
 
 .heatmap-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+.heatmap-zone { font-size: 12px; color: var(--text-main); }
+.heatmap-pct  { font-size: 12px; font-weight: 700; color: var(--text-main); }
 
-.heatmap-zone {
-  font-size: 12px;
-  color: var(--text-main);
-}
-
-.heatmap-pct {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
+/* バーのベース（グレー） */
 .heatmap-bar-bg {
   height: 6px;
   background: var(--gray-1);
@@ -289,6 +239,7 @@
   overflow: hidden;
 }
 
+/* バーの塗り部分（アニメーション付き） */
 .heatmap-bar-fill {
   height: 100%;
   border-radius: 3px;
@@ -296,6 +247,7 @@
   transition: width 0.6s ease;
 }
 
+/* 分析コメント */
 .heatmap-note {
   margin-top: 10px;
   font-size: 11px;
@@ -306,6 +258,7 @@
   line-height: 1.5;
 }
 
+/* ── 本日の統計グリッド ── */
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -318,25 +271,11 @@
   border-radius: 8px;
   padding: 10px 12px;
 }
+.stat-label { font-size: 10px; color: var(--text-sub); letter-spacing: 0.5px; margin-bottom: 4px; }
+.stat-val   { font-family: 'Bebas Neue', sans-serif; font-size: 26px; line-height: 1; color: var(--text-main); }
+.stat-unit  { font-size: 12px; }
 
-.stat-label {
-  font-size: 10px;
-  color: var(--text-sub);
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-
-.stat-val {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 26px;
-  line-height: 1;
-  color: var(--text-main);
-}
-
-.stat-unit {
-  font-size: 12px;
-}
-
+/* 詳細レポートボタン */
 .btn-report {
   width: 100%;
   padding: 10px;
@@ -350,16 +289,10 @@
   cursor: pointer;
   transition: background 0.15s;
 }
+.btn-report:hover { background: var(--green-pale); }
 
-.btn-report:hover {
-  background: var(--green-pale);
-}
-
-.panel-wisdom {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
+/* ── 今日の知恵パネル ── */
+.panel-wisdom { display: flex; gap: 12px; align-items: flex-start; }
 
 .wisdom-img {
   font-size: 28px;
@@ -377,8 +310,8 @@
   font-size: 10px;
   letter-spacing: 1px;
   color: var(--text-sub);
-  margin-bottom: 4px;
   font-weight: 600;
+  margin-bottom: 4px;
 }
 
 .wisdom-text {
@@ -387,14 +320,52 @@
   color: var(--text-main);
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   共通アニメーション
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════════════
+   スマホ対応（Matoは最重要）
+   ════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* 2カラム → 1カラム縦並び */
+  .mato-layout {
+    grid-template-columns: 1fr;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  /* 右パネル（分析）を下に表示 */
+  .mato-right { order: 2; }
+  .mato-left  { order: 1; }
+
+  /* 的エリアを画面幅いっぱいに */
+  .mato-click-area {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    aspect-ratio: 1 / 1; /* 正方形を維持 */
   }
+
+  /* Canvasも親に合わせてリサイズ */
+  #mato-canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* 的中・失中ボタンを大きく（タップしやすく） */
+  .btn-atari,
+  .btn-hazure {
+    padding: 16px;
+    font-size: 15px;
+  }
+
+  /* 射の履歴チップ */
+  .shot-chip { min-width: 50px; padding: 6px 8px; }
+
+  /* 右側パネルはコンパクトに */
+  .stats-grid { grid-template-columns: 1fr 1fr; }
 }

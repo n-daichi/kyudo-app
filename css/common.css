@@ -1,30 +1,45 @@
-/* ===========================
-   KYUDO DOJO - 共通スタイル
-   =========================== */
+/* ============================================================
+   common.css  ―  サイドバー・ヘッダーなど全ページ共通スタイル
+   ============================================================ */
 
+/* ── CSS変数（色・サイズ） ── */
 :root {
-  --green-dark:   #1a4a3a;
-  --green-mid:    #2d7a5f;
-  --green-light:  #4aad85;
-  --green-pale:   #e8f5ef;
-  --navy:         #1a2e3b;
-  --navy-light:   #243647;
-  --accent-red:   #8b2020;
-  --white:        #ffffff;
-  --bg:           #f4f6f5;
-  --sidebar-w:    200px;
-  --gray-1:       #f0f2f1;
-  --gray-2:       #e0e4e2;
-  --gray-3:       #9aaa9f;
-  --text-main:    #1a1a1a;
-  --text-sub:     #6b7a72;
-  --shadow-sm:    0 2px 8px rgba(0,0,0,0.07);
-  --shadow-md:    0 4px 20px rgba(0,0,0,0.10);
-  --radius:       12px;
+  /* ブランドカラー */
+  --green-dark : #1a4a3a;
+  --green-mid  : #2d7a5f;
+  --green-light: #4aad85;
+  --green-pale : #e8f5ef;
+  --navy       : #1a2e3b;
+  --accent-red : #8b2020;
+
+  /* グレースケール */
+  --white   : #ffffff;
+  --bg      : #f4f6f5;
+  --gray-1  : #f0f2f1;
+  --gray-2  : #e0e4e2;
+  --gray-3  : #9aaa9f;
+
+  /* テキスト */
+  --text-main: #1a1a1a;
+  --text-sub : #6b7a72;
+
+  /* シャドウ */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.07);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.10);
+
+  /* レイアウト */
+  --sidebar-w: 200px;
+  --radius   : 12px;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── リセット ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+/* ── ページ全体 ── */
 body {
   font-family: 'Noto Sans JP', sans-serif;
   background: var(--bg);
@@ -33,7 +48,9 @@ body {
   min-height: 100vh;
 }
 
-/* ── サイドバー ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   サイドバー
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .sidebar {
   width: var(--sidebar-w);
   background: var(--white);
@@ -46,6 +63,7 @@ body {
   z-index: 100;
 }
 
+/* ── ユーザー情報（サイドバー上部） ── */
 .sidebar-user {
   display: flex;
   align-items: center;
@@ -53,26 +71,35 @@ body {
   padding: 0 18px 24px;
   border-bottom: 1px solid var(--gray-2);
   margin-bottom: 16px;
-  cursor: pointer;
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
 }
 .sidebar-user:hover { opacity: 0.8; }
 
+/* ユーザーアバター（丸アイコン） */
 .user-avatar {
-  width: 36px; height: 36px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: var(--navy);
   color: white;
   font-size: 14px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-.user-name  { font-size: 13px; font-weight: 600; }
-.user-rank  { font-size: 11px; color: var(--text-sub); }
+.user-name { font-size: 13px; font-weight: 600; }
+.user-rank { font-size: 11px; color: var(--text-sub); }
 
-.sidebar-nav { flex: 1; padding: 0 8px; }
+/* ── ナビゲーション ── */
+.sidebar-nav {
+  flex: 1;
+  padding: 0 8px;
+}
 
 .nav-item {
   display: flex;
@@ -83,30 +110,37 @@ body {
   font-size: 13px;
   color: var(--text-sub);
   text-decoration: none;
-  transition: background 0.15s, color 0.15s;
   margin-bottom: 2px;
+  transition: background 0.15s, color 0.15s;
 }
-.nav-item:hover         { background: var(--gray-1); color: var(--text-main); }
-.nav-item.active        { background: var(--green-pale); color: var(--green-dark); font-weight: 600; }
+
+.nav-item:hover  { background: var(--gray-1); color: var(--text-main); }
+.nav-item.active { background: var(--green-pale); color: var(--green-dark); font-weight: 600; }
+
+/* サインアウトは赤色 */
 .nav-item.signout       { color: #c0392b; }
 .nav-item.signout:hover { background: #fdecea; }
 
+/* ── サイドバー下部 ── */
 .sidebar-bottom {
-  padding: 0 8px;
+  padding: 12px 8px 0;
   border-top: 1px solid var(--gray-2);
-  padding-top: 12px;
   margin-top: 8px;
 }
 
-/* ── メイン ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   メインコンテンツエリア
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .main-content {
-  margin-left: var(--sidebar-w);
+  margin-left: var(--sidebar-w); /* サイドバーの幅分ずらす */
   flex: 1;
   padding: 28px 32px;
   max-width: 960px;
 }
 
-/* ── ページヘッダー ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   ページヘッダー（タイトル + アクションボタン）
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .page-header {
   display: flex;
   align-items: center;
@@ -122,36 +156,47 @@ body {
 }
 
 .header-actions {
-  display: flex; align-items: center; gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+/* 丸ボタン（時計・設定アイコン） */
 .icon-btn {
-  width: 34px; height: 34px;
+  width: 34px;
+  height: 34px;
   border-radius: 8px;
   border: 1px solid var(--gray-2);
   background: white;
   cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-sub);
   transition: background 0.15s;
 }
 .icon-btn:hover { background: var(--gray-1); }
 
-/* アバターボタン → プロフィールへ */
+/* アバターボタン（右上の丸アイコン → プロフィールへ） */
 .avatar-btn {
-  width: 34px; height: 34px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: var(--navy);
   color: white;
   font-size: 13px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
+  cursor: pointer;
   transition: opacity 0.15s;
 }
 .avatar-btn:hover { opacity: 0.8; }
 
-/* ── セクション共通 ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   セクション共通
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .section-header {
   display: flex;
   align-items: flex-start;
@@ -171,10 +216,67 @@ body {
   margin-top: 2px;
 }
 
+/* 「すべて見る」などのリンク */
 .link-all {
   font-size: 12px;
+  font-weight: 500;
   color: var(--green-mid);
   text-decoration: none;
-  font-weight: 500;
 }
 .link-all:hover { text-decoration: underline; }
+
+/* ════════════════════════════════════════
+   ボトムナビ（PC時は非表示）
+   ════════════════════════════════════════ */
+.bottom-nav { display: none; }
+
+/* ════════════════════════════════════════
+   スマホ対応（768px以下）
+   ════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* サイドバーを非表示 */
+  .sidebar { display: none; }
+
+  /* メインのマージン・パディングをリセット */
+  .main-content {
+    margin-left: 0;
+    padding: 16px 16px 76px; /* 下にボトムナビ分の余白 */
+    max-width: 100%;
+  }
+
+  .page-header { margin-bottom: 14px; }
+  .page-title  { font-size: 18px; letter-spacing: 1px; }
+
+  /* ボトムナビを表示 */
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: white;
+    border-top: 1px solid var(--gray-2);
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+    z-index: 200;
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-size: 10px;
+    color: var(--text-sub);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .bottom-nav-item.active {
+    color: var(--green-dark);
+    font-weight: 700;
+  }
+
+  .bottom-nav-item svg { width: 20px; height: 20px; }
+}

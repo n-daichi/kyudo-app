@@ -1,17 +1,18 @@
-/* ===========================
-   css/profile.css - プロフィール画面のスタイル
-   =========================== */
+/* ============================================================
+   profile.css  ―  プロフィール画面専用スタイル
+   ============================================================ */
 
-/* ── 2カラムレイアウト ── */
+/* 2カラム：左プロフィールカード / 右設定 */
 .profile-grid {
   display: grid;
   grid-template-columns: 280px 1fr;
-  /* 左:カード 右:設定フォーム */
   gap: 24px;
   align-items: start;
 }
 
-/* ── 左：プロフィールカード ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   左：プロフィールカード
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .profile-card {
   background: white;
   border-radius: var(--radius);
@@ -21,7 +22,7 @@
   animation: fadeUp 0.35s ease both;
 }
 
-/* 大きなアバター（頭文字を表示） */
+/* 大きなアバター */
 .profile-avatar-big {
   width: 80px;
   height: 80px;
@@ -36,13 +37,9 @@
   margin: 0 auto 16px;
 }
 
-.profile-email {
-  font-size: 13px;
-  color: var(--text-sub);
-  margin-bottom: 6px;
-  word-break: break-all;
-}
+.profile-email { font-size: 13px; color: var(--text-sub); margin-bottom: 6px; word-break: break-all; }
 
+/* 段位バッジ */
 .profile-rank-badge {
   display: inline-block;
   background: var(--green-pale);
@@ -54,35 +51,17 @@
   margin-bottom: 20px;
 }
 
-.profile-divider {
-  border: none;
-  border-top: 1px solid var(--gray-2);
-  margin: 16px 0;
-}
+.profile-divider { border: none; border-top: 1px solid var(--gray-2); margin: 16px 0; }
 
-/* 統計（総射数・的中率・練習日数）を横並びで表示 */
-.profile-stat-row {
-  display: flex;
-  justify-content: space-around;
-}
+/* 統計（総射数・的中率・練習日数） */
+.profile-stat-row { display: flex; justify-content: space-around; }
+.profile-stat { text-align: center; }
+.profile-stat-val   { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--text-main); }
+.profile-stat-label { font-size: 10px; color: var(--text-sub); letter-spacing: 0.5px; }
 
-.profile-stat {
-  text-align: center;
-}
-
-.profile-stat-val {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px;
-  color: var(--text-main);
-}
-
-.profile-stat-label {
-  font-size: 10px;
-  color: var(--text-sub);
-  letter-spacing: 0.5px;
-}
-
-/* ── 右：設定パネル ── */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━
+   右：設定パネル
+━━━━━━━━━━━━━━━━━━━━━━━━ */
 .profile-right {
   display: flex;
   flex-direction: column;
@@ -106,7 +85,7 @@
   gap: 8px;
 }
 
-/* 設定の各行 */
+/* 各設定行 */
 .settings-row {
   display: flex;
   align-items: center;
@@ -114,22 +93,12 @@
   padding: 12px 0;
   border-bottom: 1px solid var(--gray-1);
 }
+.settings-row:last-child { border-bottom: none; }
 
-.settings-row:last-child {
-  border-bottom: none;
-}
+.settings-label { font-size: 13px; color: var(--text-main); }
+.settings-sub   { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
 
-.settings-label {
-  font-size: 13px;
-  color: var(--text-main);
-}
-
-.settings-sub {
-  font-size: 11px;
-  color: var(--text-sub);
-  margin-top: 2px;
-}
-
+/* テキスト入力 */
 .settings-input {
   border: 1.5px solid var(--gray-2);
   border-radius: 8px;
@@ -138,12 +107,11 @@
   font-family: 'Noto Sans JP', sans-serif;
   outline: none;
   width: 180px;
+  transition: border-color 0.2s;
 }
+.settings-input:focus { border-color: var(--green-mid); }
 
-.settings-input:focus {
-  border-color: var(--green-mid);
-}
-
+/* セレクトボックス */
 .settings-select {
   border: 1.5px solid var(--gray-2);
   border-radius: 8px;
@@ -155,8 +123,10 @@
   cursor: pointer;
 }
 
+/* 保存ボタン */
 .btn-save-settings {
   padding: 10px 24px;
+  margin-top: 16px;
   background: var(--navy);
   color: white;
   border: none;
@@ -166,26 +136,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;
-  margin-top: 16px;
 }
+.btn-save-settings:hover { opacity: 0.85; }
 
-.btn-save-settings:hover {
-  opacity: 0.85;
-}
-
-/* ── アカウント（危険ゾーン）── */
-.danger-zone {
-  background: #fdecea;
-  border-radius: var(--radius);
-  padding: 18px 20px;
-}
-
-.danger-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #c0392b;
-  margin-bottom: 12px;
-}
+/* 危険操作エリア（赤背景） */
+.danger-zone { background: #fdecea; border-radius: var(--radius); padding: 18px 20px; }
+.danger-title { font-size: 13px; font-weight: 700; color: #c0392b; margin-bottom: 12px; }
 
 .btn-danger {
   padding: 9px 18px;
@@ -197,231 +153,24 @@
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, color 0.15s;
 }
-
-.btn-danger:hover {
-  background: #c0392b;
-  color: white;
-}
+.btn-danger:hover { background: #c0392b; color: white; }
 
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.profile-grid {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 24px;
-  align-items: start;
-}
+/* ════════════════════════════════════════
+   スマホ対応
+   ════════════════════════════════════════ */
+@media (max-width: 768px) {
 
-/* 左：プロフィールカード */
-.profile-card {
-  background: white;
-  border-radius: var(--radius);
-  padding: 28px 24px;
-  box-shadow: var(--shadow-sm);
-  text-align: center;
-  animation: fadeUp 0.35s ease both;
-}
+  /* 2カラム → 縦並び */
+  .profile-grid { grid-template-columns: 1fr; }
 
-.profile-avatar-big {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: var(--navy);
-  color: white;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 16px;
-}
-
-.profile-email {
-  font-size: 13px;
-  color: var(--text-sub);
-  margin-bottom: 6px;
-  word-break: break-all;
-}
-
-.profile-rank-badge {
-  display: inline-block;
-  background: var(--green-pale);
-  color: var(--green-dark);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-}
-
-.profile-divider {
-  border: none;
-  border-top: 1px solid var(--gray-2);
-  margin: 16px 0;
-}
-
-.profile-stat-row {
-  display: flex;
-  justify-content: space-around;
-}
-
-.profile-stat {
-  text-align: center;
-}
-
-.profile-stat-val {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px;
-  color: var(--text-main);
-}
-
-.profile-stat-label {
-  font-size: 10px;
-  color: var(--text-sub);
-  letter-spacing: 0.5px;
-}
-
-/* 右：設定パネル */
-.profile-right {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.settings-card {
-  background: white;
-  border-radius: var(--radius);
-  padding: 22px 24px;
-  box-shadow: var(--shadow-sm);
-  animation: fadeUp 0.35s 0.1s ease both;
-}
-
-.settings-title {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.settings-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--gray-1);
-}
-
-.settings-row:last-child {
-  border-bottom: none;
-}
-
-.settings-label {
-  font-size: 13px;
-  color: var(--text-main);
-}
-
-.settings-sub {
-  font-size: 11px;
-  color: var(--text-sub);
-  margin-top: 2px;
-}
-
-.settings-input {
-  border: 1.5px solid var(--gray-2);
-  border-radius: 8px;
-  padding: 7px 12px;
-  font-size: 13px;
-  font-family: 'Noto Sans JP', sans-serif;
-  outline: none;
-  width: 180px;
-}
-
-.settings-input:focus {
-  border-color: var(--green-mid);
-}
-
-.settings-select {
-  border: 1.5px solid var(--gray-2);
-  border-radius: 8px;
-  padding: 7px 12px;
-  font-size: 13px;
-  font-family: 'Noto Sans JP', sans-serif;
-  outline: none;
-  background: white;
-  cursor: pointer;
-}
-
-.btn-save-settings {
-  padding: 10px 24px;
-  background: var(--navy);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: 'Noto Sans JP', sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  margin-top: 16px;
-}
-
-.btn-save-settings:hover {
-  opacity: 0.85;
-}
-
-.danger-zone {
-  background: #fdecea;
-  border-radius: var(--radius);
-  padding: 18px 20px;
-}
-
-.danger-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #c0392b;
-  margin-bottom: 12px;
-}
-
-.btn-danger {
-  padding: 9px 18px;
-  background: white;
-  color: #c0392b;
-  border: 1.5px solid #c0392b;
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: 'Noto Sans JP', sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.btn-danger:hover {
-  background: #c0392b;
-  color: white;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  /* 設定の入力欄を全幅に */
+  .settings-input  { width: 100%; }
+  .settings-row    { flex-direction: column; align-items: flex-start; gap: 8px; }
 }
