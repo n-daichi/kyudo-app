@@ -42,7 +42,7 @@ async function signUp(email, password) {
 async function signOut() {
   const { error } = await supabaseClient.auth.signOut();
   if (error) throw error;
-  window.location.href = '../index.html'; // ← pages/から見たルートへ
+  window.location.href = './index.html'; // ← pages/から見たルートへ
 }
 // ──────────────────────────────
 // 認証：現在のユーザーを取得

@@ -4,25 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KYUDO DOJO - ログイン</title>
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
-  <!-- ログイン画面専用のCSS -->
+
+  <!-- スタイルシート -->
   <link rel="stylesheet" href="css/login.css" />
-  <!-- Supabase ライブラリ（CDN）-->
+
+  <!-- Supabase SDK（CDN） -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <!-- 背景のグラデーション -->
+
+  <!-- 背景 -->
   <div class="bg-wrapper">
     <div class="bg-silhouette"></div>
     <div class="bg-overlay"></div>
   </div>
 
-  <!-- 中央のカードエリア -->
+  <!-- メインコンテンツ -->
   <div class="page-center">
-    <div class="login-card">
 
-      <!-- ロゴ -->
+    <!-- ログインカード -->
+    <div class="login-card">
       <div class="logo">
         <div class="logo-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
@@ -37,20 +42,20 @@
 
       <h2 class="form-title">ログイン</h2>
 
-      <!-- onsubmit で login.js の handleLogin() を呼ぶ -->
+      <!-- ログインフォーム -->
       <form class="login-form" onsubmit="handleLogin(event)">
         <div class="field-group">
-          <label>ユーザーID / メールアドレス</label>
+          <label for="email">ユーザーID / メールアドレス</label>
           <div class="input-wrapper">
-            <input type="email" placeholder="example@kyudo.jp" id="email" autocomplete="email" />
+            <input type="email" id="email" placeholder="example@kyudo.jp" autocomplete="email" />
             <span class="input-icon">@</span>
           </div>
         </div>
 
         <div class="field-group">
-          <label>パスワード</label>
+          <label for="password">パスワード</label>
           <div class="input-wrapper">
-            <input type="password" placeholder="••••••••" id="password" autocomplete="current-password" />
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
             <span class="input-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -64,7 +69,7 @@
           ログイン <span class="btn-arrow">→</span>
         </button>
 
-        <a href="#" class="forgot-link">パスワードをお忘れの方はこちら</a>
+        <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">パスワードをお忘れの方はこちら</a>
       </form>
     </div>
 
@@ -73,9 +78,10 @@
       <span>アカウントをお持ちでいらっしゃいませんか？</span>
       <a href="#" class="btn-register" onclick="handleRegister()">新規登録 ↗</a>
     </div>
+
   </div>
 
-  <!-- JS の読み込み順：supabase.js → login.js -->
+  <!-- JS：Supabase接続 → ログイン処理の順に読む -->
   <script src="js/supabase.js"></script>
   <script src="js/login.js"></script>
 </body>
