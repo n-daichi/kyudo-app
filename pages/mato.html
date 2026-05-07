@@ -6,17 +6,19 @@
   <title>KYUDO DOJO - 的の位置記録</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="common.css" />
-  <link rel="stylesheet" href="mato.css" />
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/mato.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
+  <!-- ===== サイドバー ===== -->
   <aside class="sidebar">
     <a href="profile.html" class="sidebar-user">
       <div class="user-avatar" id="sidebar-avatar">弓</div>
       <div class="user-info">
         <p class="user-name" id="sidebar-name">読み込み中...</p>
-        <p class="user-rank" id="sidebar-rank">Rank: Shodan</p>
+        <p class="user-rank" id="sidebar-rank">Rank: 初段</p>
       </div>
     </a>
     <nav class="sidebar-nav">
@@ -42,13 +44,14 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Support
       </a>
-      <a href="login.html" class="nav-item signout" onclick="handleSignOut(event)">
+      <a href="../login.html" class="nav-item signout" onclick="handleSignOut(event)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sign Out
       </a>
     </div>
   </aside>
 
+  <!-- ===== メインコンテンツ ===== -->
   <main class="main-content">
     <header class="page-header">
       <div>
@@ -56,37 +59,43 @@
         <p class="page-sub">Seek perfection in every release.</p>
       </div>
       <div class="header-actions">
-        <button class="icon-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </button>
-        <button class="icon-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20 12h-2M6 12H4M19.07 19.07l-1.41-1.41M5.34 5.34L3.93 3.93M12 20v-2M12 6V4"/></svg>
-        </button>
+        <button class="icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
+        <button class="icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20 12h-2M6 12H4M19.07 19.07l-1.41-1.41M5.34 5.34L3.93 3.93M12 20v-2M12 6V4"/></svg></button>
         <a href="profile.html" class="avatar-btn" id="header-avatar">弓</a>
       </div>
     </header>
 
     <div class="mato-layout">
+
+      <!-- ===== 左エリア：的と記録ボタン ===== -->
       <div class="mato-left">
+
+        <!-- セッション情報 -->
         <div class="session-info">
           <span class="session-badge">CURRENT SESSION</span>
+          <!-- mato.js がセッション名を書き込む -->
           <p class="session-name" id="session-name">読み込み中...</p>
+          <!-- 甲矢/乙矢の切り替えタブ -->
           <div class="arrow-tabs">
             <button class="tab active" onclick="switchTab(this, 'haya')">甲矢 (Haya)</button>
-            <button class="tab" onclick="switchTab(this, 'otoya')">乙矢 (Otoya)</button>
+            <button class="tab"        onclick="switchTab(this, 'otoya')">乙矢 (Otoya)</button>
           </div>
         </div>
 
-        <!-- 的：canvas + 外側のクリックエリア -->
+        <!-- 的のクリックエリア
+             mato-click-area は Canvas より大きく、的の外側もクリック可能
+             Canvas 自体は pointer-events:none で CSS に設定済み -->
         <div class="mato-wrap">
           <div class="mato-click-area" id="mato-click-area">
             <canvas id="mato-canvas" width="320" height="320"></canvas>
           </div>
+          <!-- クリック位置の説明テキスト（mato.js が更新） -->
           <p class="mato-hint" id="mato-hint">的または周囲をクリックして着弾位置を記録してください</p>
         </div>
 
+        <!-- 的中・失中ボタン -->
         <div class="result-btns">
-          <button class="btn-atari" onclick="recordResult('atari')">
+          <button class="btn-atari"  onclick="recordResult('atari')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             的中 (Atari)
           </button>
@@ -96,10 +105,15 @@
           </button>
         </div>
 
+        <!-- 直近の射履歴（mato.js が動的生成） -->
         <div class="shot-history" id="shot-history"></div>
+
       </div>
 
+      <!-- ===== 右エリア：分析パネル ===== -->
       <div class="mato-right">
+
+        <!-- 着弾分析（ヒートマップ） -->
         <div class="panel">
           <h3 class="panel-title">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
@@ -108,6 +122,7 @@
           <div class="heatmap-list" id="heatmap-list"></div>
         </div>
 
+        <!-- 本日の統計 -->
         <div class="panel">
           <h3 class="panel-title">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
@@ -134,18 +149,22 @@
           <button class="btn-report" onclick="window.location.href='stats.html'">詳細レポートを表示</button>
         </div>
 
+        <!-- 今日の知恵（日替わり格言） -->
         <div class="panel panel-wisdom">
           <div class="wisdom-img">🏹</div>
           <div>
             <p class="wisdom-label">DAILY WISDOM</p>
+            <!-- mato.js が日付に応じた格言を書き込む -->
             <p class="wisdom-text" id="daily-wisdom">「正射必中」</p>
           </div>
         </div>
+
       </div>
     </div>
   </main>
 
-  <script src="supabase.js"></script>
-  <script src="mato.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/mato.js"></script>
 </body>
 </html>

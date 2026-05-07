@@ -3,37 +3,52 @@
 ## フォルダ構成
 
 ```
-kyudo-dojo/
-├── login.html     ← ログイン画面（今ここ）
-├── login.css      ← ログイン画面のスタイル
-├── login.js       ← ログイン処理（後でSupabase接続）
-└── README.md      ← このファイル
+kyudo-app/
+├── login.html          ← ログイン画面（ルート）
+├── vercel.json         ← Vercel のルーティング設定
+├── .gitignore          ← js/supabase.js を除外
+│
+├── pages/              ← 各ページの HTML
+│   ├── dashboard.html  ← 道場（的中記録）
+│   ├── mato.html       ← 的の位置記録
+│   ├── stats.html      ← 統計・分析
+│   ├── profile.html    ← プロフィール設定
+│   └── support.html    ← サポート・FAQ
+│
+├── css/                ← スタイルシート
+│   ├── common.css      ← 全ページ共通（サイドバー・ヘッダー等）
+│   ├── login.css       ← ログイン画面専用
+│   ├── dashboard.css   ← ダッシュボード専用
+│   ├── mato.css        ← 的の位置記録専用
+│   ├── stats.css       ← 統計・分析専用
+│   ├── profile.css     ← プロフィール専用
+│   └── support.css     ← サポート専用
+│
+└── js/                 ← JavaScript
+    ├── supabase.js     ← DB接続・認証（⚠️ .gitignore に追加済み）
+    ├── utils.js        ← 全ページ共通の関数
+    ├── login.js        ← ログイン画面
+    ├── dashboard.js    ← ダッシュボード
+    ├── mato.js         ← 的の位置記録
+    ├── stats.js        ← 統計・分析
+    ├── profile.js      ← プロフィール
+    └── support.js      ← サポート
 ```
 
-## 今後追加予定のファイル
+## JS の読み込み順（各 HTML 共通）
 
-```
-kyudo-dojo/
-├── dashboard.html ← 道場ダッシュボード（的中記録）
-├── mato.html      ← 的の位置記録
-├── stats.html     ← 統計・分析
-└── supabase.js    ← Supabase接続設定（後で作成）
+```html
+<script src="../js/supabase.js"></script>  <!-- 1. DB接続 -->
+<script src="../js/utils.js"></script>     <!-- 2. 共通関数 -->
+<script src="../js/〇〇.js"></script>      <!-- 3. ページ固有 -->
 ```
 
-## 開き方
+## 開き方（ローカル開発）
 
-`login.html` をブラウザにドラッグ＆ドロップするだけで開けます。
-VSCodeの場合は「Live Server」拡張機能を使うと便利です。
+VSCode の「Live Server」拡張機能で `login.html` を開く
 
-## 学習ポイント（login.html）
+## Vercel へのデプロイ
 
-- `<form>` タグ：入力フォームの作り方
-- `onsubmit="handleLogin(event)"` ：ボタンを押したときの処理
-- `event.preventDefault()` ：ページ再読込を防ぐ重要なコード
-
-## 学習ポイント（login.css）
-
-- `CSS変数（--green-dark など）`：色を一箇所で管理する方法
-- `@keyframes cardIn`：アニメーションの書き方
-- `:focus`：入力欄にフォーカスしたときのスタイル
-- `position: relative / absolute`：アイコンをフィールド内に置く方法
+1. `js/supabase.js` の URL と KEY を環境変数に移行
+2. GitHub にプッシュ
+3. Vercel で GitHub リポジトリを接続

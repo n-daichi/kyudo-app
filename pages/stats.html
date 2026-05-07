@@ -6,17 +6,18 @@
   <title>KYUDO DOJO - 統計・分析</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="common.css" />
-  <link rel="stylesheet" href="stats.css" />
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/stats.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
   <aside class="sidebar">
     <a href="profile.html" class="sidebar-user">
       <div class="user-avatar" id="sidebar-avatar">弓</div>
       <div class="user-info">
         <p class="user-name" id="sidebar-name">読み込み中...</p>
-        <p class="user-rank" id="sidebar-rank">Rank: Shodan</p>
+        <p class="user-rank" id="sidebar-rank">Rank: 初段</p>
       </div>
     </a>
     <nav class="sidebar-nav">
@@ -42,7 +43,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Support
       </a>
-      <a href="login.html" class="nav-item signout" onclick="handleSignOut(event)">
+      <a href="../login.html" class="nav-item signout" onclick="handleSignOut(event)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sign Out
       </a>
@@ -59,7 +60,7 @@
       </div>
     </header>
 
-    <!-- サマリーカード -->
+    <!-- サマリーカード（stats.js が値を書き込む） -->
     <div class="summary-row">
       <div class="summary-card">
         <p class="summary-label">WEEKLY SUMMARY</p>
@@ -83,33 +84,40 @@
       </div>
     </div>
 
-    <!-- グラフ -->
+    <!-- グラフ + 矢別分析 -->
     <div class="chart-row">
+
+      <!-- 的中率推移グラフ -->
       <div class="chart-card">
         <div class="chart-header">
           <div class="chart-title-row">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green-mid)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             <span class="chart-title">的中率推移</span>
           </div>
+          <!-- 期間切り替えセレクト（stats.js のイベントリスナーで制御） -->
           <select class="chart-select" id="chart-period">
             <option value="30">過去30日</option>
             <option value="7">過去7日</option>
             <option value="90">過去90日</option>
           </select>
         </div>
+        <!-- 棒グラフ（stats.js が動的生成） -->
         <div class="bar-chart" id="bar-chart"></div>
         <div class="chart-x-labels" id="chart-x"></div>
       </div>
 
-      <!-- 矢別分析（日付切替付き） -->
+      <!-- 矢別的中率分析 -->
       <div class="arrow-analysis-card">
         <div class="arrow-analysis-header">
           <h3 class="chart-title">矢別的中率分析</h3>
+          <!-- 日付フィルタ（onArrowDateChange は stats.js で定義） -->
           <select class="chart-select" id="arrow-date-select" onchange="onArrowDateChange(this.value)">
             <option value="all">全期間</option>
+            <!-- stats.js が練習日の日付オプションを追加する -->
           </select>
         </div>
         <div class="arrow-bars" id="arrow-bars"></div>
+        <!-- 最低的中率の矢へのアドバイス（データがあるとき表示） -->
         <div class="arrow-note" id="arrow-note" style="display:none;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           <span id="arrow-note-text"></span>
@@ -117,10 +125,12 @@
       </div>
     </div>
 
-    <!-- 下段 -->
+    <!-- 的中傾向 + ミニ統計 -->
     <div class="bottom-row">
+      <!-- ミニ的と傾向テキスト -->
       <div class="tendency-card">
         <div class="tendency-visual">
+          <!-- drawMiniMato() (utils.js) が描画 -->
           <canvas id="mini-mato" width="80" height="80"></canvas>
         </div>
         <div class="tendency-text">
@@ -128,20 +138,24 @@
           <p class="tendency-desc" id="tendency-desc">データを読み込んでいます...</p>
         </div>
       </div>
+
       <div class="mini-stat-card">
         <p class="mini-stat-label">平均矢数/日</p>
         <p class="mini-stat-val" id="avg-shots">-<span class="mini-stat-unit">本</span></p>
         <p class="mini-stat-sub" id="avg-shots-sub"></p>
       </div>
+
       <div class="mini-stat-card">
         <p class="mini-stat-label">練習日数</p>
         <p class="mini-stat-val" id="practice-days">-<span class="mini-stat-unit">日</span></p>
         <p class="mini-stat-sub" id="practice-days-sub">過去30日間</p>
       </div>
     </div>
+
   </main>
 
-  <script src="supabase.js"></script>
-  <script src="stats.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/stats.js"></script>
 </body>
 </html>

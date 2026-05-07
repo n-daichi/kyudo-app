@@ -6,18 +6,23 @@
   <title>KYUDO DOJO - ログイン</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="login.css" />
-  <!-- Supabaseライブラリ（CDNから読み込む） -->
+  <!-- ログイン画面専用のCSS -->
+  <link rel="stylesheet" href="css/login.css" />
+  <!-- Supabase ライブラリ（CDN）-->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+  <!-- 背景のグラデーション -->
   <div class="bg-wrapper">
     <div class="bg-silhouette"></div>
     <div class="bg-overlay"></div>
   </div>
 
+  <!-- 中央のカードエリア -->
   <div class="page-center">
     <div class="login-card">
+
+      <!-- ロゴ -->
       <div class="logo">
         <div class="logo-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
@@ -32,6 +37,7 @@
 
       <h2 class="form-title">ログイン</h2>
 
+      <!-- onsubmit で login.js の handleLogin() を呼ぶ -->
       <form class="login-form" onsubmit="handleLogin(event)">
         <div class="field-group">
           <label>ユーザーID / メールアドレス</label>
@@ -55,21 +61,22 @@
         </div>
 
         <button type="submit" class="btn-login">
-          ログイン
-          <span class="btn-arrow">→</span>
+          ログイン <span class="btn-arrow">→</span>
         </button>
 
         <a href="#" class="forgot-link">パスワードをお忘れの方はこちら</a>
       </form>
     </div>
 
+    <!-- 新規登録リンク -->
     <div class="register-row">
       <span>アカウントをお持ちでいらっしゃいませんか？</span>
       <a href="#" class="btn-register" onclick="handleRegister()">新規登録 ↗</a>
     </div>
   </div>
-  <!-- supabase.jsを先に読み込む（login.jsより前に必要） -->
-  <script src="supabase.js"></script>
-  <script src="login.js"></script>
+
+  <!-- JS の読み込み順：supabase.js → login.js -->
+  <script src="js/supabase.js"></script>
+  <script src="js/login.js"></script>
 </body>
 </html>

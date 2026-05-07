@@ -1,1 +1,7 @@
-supabase.js
+# Supabase の接続情報（APIキーが含まれるため公開しない）
+js/supabase.js
+
+# OS・エディタの一時ファイル
+.DS_Store
+Thumbs.db
+.vscode/

@@ -6,7 +6,7 @@
   <title>KYUDO DOJO - プロフィール</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="common.css" />
+  <link rel="stylesheet" href="../css/common.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     .profile-grid { display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; }
@@ -94,7 +94,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Support
       </a>
-      <a href="login.html" class="nav-item signout" onclick="handleSignOut(event)">
+      <a href="../login.html" class="nav-item signout" onclick="handleSignOut(event)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sign Out
       </a>
@@ -197,11 +197,11 @@
     </div>
   </main>
 
-  <script src="supabase.js"></script>
+  <script src="../js/supabase.js"></script>
   <script>
     async function init() {
       const user = await getCurrentUser();
-      if (!user) { window.location.href = 'login.html'; return; }
+      if (!user) { window.location.href = "../login.html";; return; }
 
       // ローカルストレージから設定を読み込む
       const saved = JSON.parse(localStorage.getItem('kyudo-profile') || '{}');
@@ -266,5 +266,6 @@
 
     init();
   </script>
+  <script src="../js/profile.js"></script>
 </body>
 </html>
