@@ -67,7 +67,7 @@ async function init() {
     return;
   }
 
-  initSidebar(user); // utils.js
+  updateSidebarUser(user); // utils.js
 
   document.getElementById('daily-wisdom').textContent =
     WISDOMS[new Date().getDate() % WISDOMS.length];
@@ -75,6 +75,7 @@ async function init() {
   initCanvas();    // Canvas要素を取得
   initClickArea(); // クリックエリアを取得
   initEvents();    // イベントリスナーを登録
+  resizeCanvas();  // 初回サイズ調整（initCanvas後に実行）
 
   setLoading(true); // 読み込み開始：ボタンを無効化
   try {
@@ -497,19 +498,23 @@ init();
  */
 function resizeCanvas() {
   const area = document.getElementById('mato-click-area');
-  if (!area) return;
+  if (!area || !canvas) return;
 
-  // 親要素の幅を取得（最大320pxに制限）
   const size = Math.min(area.clientWidth, 320);
 
-  // canvas の実サイズを変更（描画内容はリセットされるので再描画が必要）
   canvas.width  = size;
   canvas.height = size;
 
-  drawMato(); // リサイズ後に再描画
+  // canvas定数をリサイズ後の値に更新
+  CANVAS_W  = size;
+  CANVAS_H  = size;
+  CANVAS_CX = size / 2;
+  CANVAS_CY = size / 2;
+  MATO_R    = size * 0.44;
+  HOSHI_R   = MATO_R * (12 / 36);
+
+  drawMato();
 }
 
-// ページ読み込み時とリサイズ時に実行
+// ウィンドウリサイズ時に再調整（初回はinit()内で呼ぶ）
 window.addEventListener('resize', resizeCanvas);
-// DOMが完全に読み込まれてからサイズを取得する
-window.addEventListener('load', resizeCanvas);
