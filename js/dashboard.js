@@ -271,7 +271,7 @@ async function renderLogs() {
           <div class="log-bar"></div>
           <div class="log-info">
             <p class="log-title">練習記録</p>
-            <p class="log-detail">${data.total}射 ${data.hits}中｜中率 ${pct}%</p>
+            <p class="log-detail">${data.total}射 ${data.hits}中｜的中率 ${pct}%</p>
           </div>
           <div class="log-dots">${dots}</div>
         </div>
