@@ -7,7 +7,7 @@
 // ── 接続情報 ──
 // Vercel公開時は環境変数から読む（window.__SUPABASE_URL__ が設定されていれば優先）
 const SUPABASE_URL = window.__SUPABASE_URL__ || 'https://htyerocmuhanaixwgrdk.supabase.co';
-const SUPABASE_KEY = window.__SUPABASE_KEY__ || 'YOUR_ANON_KEY'; // ← 自分のキーに書き換える
+const SUPABASE_KEY = window.__SUPABASE_KEY__ || 'sb_publishable_nl8-HSe7Kr9obq1hlC6HRA_cvDrwBvF'; // ← 自分のキーに書き換える
 
 // ── Supabaseクライアントを初期化 ──
 const { createClient } = window.supabase;
