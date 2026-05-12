@@ -33,20 +33,59 @@ let heatmapData = [
 //  初期化
 // ════════════════════════════════════════
 
+// ── ローディング中フラグ（true の間はボタン操作を無効にする） ──
+let isLoading = true;
+
+/**
+ * ローディング状態を切り替える
+ * データ取得中に矢を入力するとカウントがずれるため、完了まで入力を止める
+ */
+function setLoading(loading) {
+  isLoading = loading;
+
+  const btnAtari  = document.querySelector('.btn-atari');
+  const btnHazure = document.querySelector('.btn-hazure');
+  const area      = document.getElementById('mato-click-area');
+
+  if (loading) {
+    if (btnAtari)  { btnAtari.disabled  = true;  btnAtari.style.opacity  = '0.5'; }
+    if (btnHazure) { btnHazure.disabled = true;  btnHazure.style.opacity = '0.5'; }
+    if (area)      { area.style.pointerEvents = 'none'; area.style.cursor = 'wait'; }
+    document.getElementById('session-name').textContent = '読み込み中...';
+  } else {
+    if (btnAtari)  { btnAtari.disabled  = false; btnAtari.style.opacity  = '1'; }
+    if (btnHazure) { btnHazure.disabled = false; btnHazure.style.opacity = '1'; }
+    if (area)      { area.style.pointerEvents = 'auto'; area.style.cursor = 'crosshair'; }
+  }
+}
+
 async function init() {
-  const user = await requireLogin(); // utils.js
-  if (!user) return;
+  // まずセッションを確認（サーバー通信なし）
+  const user = await getCurrentUser();
+  if (!user) {
+    window.location.href = '../index.html';
+    return;
+  }
 
   initSidebar(user); // utils.js
 
-  // 今日の知恵を日付でローテーション
   document.getElementById('daily-wisdom').textContent =
     WISDOMS[new Date().getDate() % WISDOMS.length];
 
-  await loadTodayData();
-  drawMato();
-  renderShotHistory();
-  renderHeatmap();
+  setLoading(true); // 読み込み開始：ボタンを無効化
+  try {
+    await loadTodayData();
+    drawMato();
+    renderShotHistory();
+    renderHeatmap();
+  } catch (e) {
+    console.error('初期化エラー:', e);
+    // エラー内容をセッション名に表示してデバッグしやすくする
+    const el = document.getElementById('session-name');
+    if (el) el.textContent = 'データ取得に失敗しました';
+  } finally {
+    setLoading(false); // エラーが起きても必ず解除
+  }
 }
 
 
@@ -309,6 +348,9 @@ function angleToClock(deg) {
 // ════════════════════════════════════════
 
 async function recordResult(result) {
+  // 読み込み中は入力を受け付けない（カウントずれ防止）
+  if (isLoading) return;
+
   let storeX, storeY;
 
   if (pendingX !== null) {
@@ -325,6 +367,8 @@ async function recordResult(result) {
       storeY = 0.5 + (Math.random() - 0.5) * 0.7;
     }
   }
+
+  setLoading(true); // 保存中も入力を止める
 
   try {
     await saveShot({ // supabase.js
@@ -356,6 +400,8 @@ async function recordResult(result) {
   } catch (error) {
     alert('保存に失敗しました：' + error.message);
     console.error(error);
+  } finally {
+    setLoading(false); // 成功・失敗どちらでも入力を再開
   }
 }
 
