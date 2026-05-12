@@ -304,15 +304,13 @@ function initClickArea() {
 
 // イベント登録は initEvents() で行う（DOM読み込み後）
 function initEvents() {
+  // クリックで着弾位置を記録
   clickArea.addEventListener('click', function(e) {
-  // canvas の getBoundingClientRect で座標をcanvas比率に変換
-  const rect = canvas.getBoundingClientRect();
-  pendingX = (e.clientX - rect.left) / CANVAS_W;
-  pendingY = (e.clientY - rect.top)  / CANVAS_H;
-  updateHint(pendingX, pendingY);
-  drawMato();
-});
-
+    const rect = canvas.getBoundingClientRect();
+    pendingX = (e.clientX - rect.left) / CANVAS_W;
+    pendingY = (e.clientY - rect.top)  / CANVAS_H;
+    updateHint(pendingX, pendingY);
+    drawMato();
   });
 
   // マウス移動時にヒントテキストを更新
