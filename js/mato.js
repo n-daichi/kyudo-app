@@ -72,6 +72,10 @@ async function init() {
   document.getElementById('daily-wisdom').textContent =
     WISDOMS[new Date().getDate() % WISDOMS.length];
 
+  initCanvas();    // Canvas要素を取得
+  initClickArea(); // クリックエリアを取得
+  initEvents();    // イベントリスナーを登録
+
   setLoading(true); // 読み込み開始：ボタンを無効化
   try {
     await loadTodayData();
@@ -179,17 +183,19 @@ function calcHeatmap(withPos) {
 //  Canvas：的を描く
 // ════════════════════════════════════════
 
-const canvas   = document.getElementById('mato-canvas');
-const ctx      = canvas.getContext('2d');
-const CANVAS_W = canvas.width;
-const CANVAS_H = canvas.height;
-const CANVAS_CX = CANVAS_W / 2;
-const CANVAS_CY = CANVAS_H / 2;
+// トップレベルではDOMがまだ準備できていない場合があるためletで宣言してinit内で初期化
+let canvas, ctx, CANVAS_W, CANVAS_H, CANVAS_CX, CANVAS_CY, MATO_R, HOSHI_R;
 
-// 弓道の的（星的）：外枠=36cm、星（黒丸）=12cm
-// canvasの幅を36cmとして比率を計算
-const MATO_R  = CANVAS_W * 0.44;
-const HOSHI_R = MATO_R * (12 / 36);
+function initCanvas() {
+  canvas    = document.getElementById('mato-canvas');
+  ctx       = canvas.getContext('2d');
+  CANVAS_W  = canvas.width;
+  CANVAS_H  = canvas.height;
+  CANVAS_CX = CANVAS_W / 2;
+  CANVAS_CY = CANVAS_H / 2;
+  MATO_R    = CANVAS_W * 0.44;
+  HOSHI_R   = MATO_R * (12 / 36);
+}
 
 function drawMato() {
   ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
@@ -288,9 +294,17 @@ function drawMarker(px, py, result, isHighlighted) {
 //  クリックイベント（canvas全面でクリックを受け付ける）
 // ════════════════════════════════════════
 
-const clickArea = document.getElementById('mato-click-area');
+// clickAreaはinitCanvas()内でイベント登録する
+// （ここでは宣言のみ）
+let clickArea;
 
-clickArea.addEventListener('click', function(e) {
+function initClickArea() {
+  clickArea = document.getElementById('mato-click-area');
+}
+
+// イベント登録は initEvents() で行う（DOM読み込み後）
+function initEvents() {
+  clickArea.addEventListener('click', function(e) {
   // canvas の getBoundingClientRect で座標をcanvas比率に変換
   const rect = canvas.getBoundingClientRect();
   pendingX = (e.clientX - rect.left) / CANVAS_W;
@@ -299,11 +313,14 @@ clickArea.addEventListener('click', function(e) {
   drawMato();
 });
 
-// マウス移動時にヒントテキストを更新
-clickArea.addEventListener('mousemove', function(e) {
-  const rect = canvas.getBoundingClientRect();
-  updateHint((e.clientX - rect.left) / CANVAS_W, (e.clientY - rect.top) / CANVAS_H);
-});
+  });
+
+  // マウス移動時にヒントテキストを更新
+  clickArea.addEventListener('mousemove', function(e) {
+    const rect = canvas.getBoundingClientRect();
+    updateHint((e.clientX - rect.left) / CANVAS_W, (e.clientY - rect.top) / CANVAS_H);
+  });
+}
 
 
 /**
